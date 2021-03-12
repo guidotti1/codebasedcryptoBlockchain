@@ -1,51 +1,50 @@
 #include "blockchain.h"
 
 
-//0 arg and 1 arg constructors
 blockchain::blockchain()
 {
 	createGenesisBlock();
+	blockchainSize=0;
 }
 
-blockchain::blockchain(int setDifficulty, setReward)
+blockchain::blockchain(int setDifficulty, int setReward)
 {
 	createGenesisBlock();
 	difficulty=setDifficulty;
-	transactionReward = setReward;
+	miningReward = setReward;
+	blockchainSize=0;
 }
 
-//used to create gensisblock in constructor
+
 void blockchain::createGenesisBlock()
 {
-	string data="Genesis block";
-	block genesisBlock(0, time(NULL), data, "0", 0);
+	vector<transaction> emptyTransactions;
+	block genesisBlock(time(NULL), emptyTransactions, "0", 0);
 	chain.push_back(genesisBlock);
 	
 }
 
-//last block in the chain
 block blockchain::getLastBlock()
 {
 	return chain[chain.size()-1];
 }
 
 
-//adds a block by mining first, then adding
-void blockchain::addBlock(int i, string data)
+/*void blockchain::addBlock(string data)
 {
 	block lastBlock=getLastBlock();
 	string prev = lastBlock.getCurrHash();
 	block nextBlock;
 	nextBlock.setPrevHash(prev);
 	nextBlock.setNonce(0);
-	nextBlock.setId(i);
-	nextBlock.setTransaction(data);
 	//block nextBlock(i, time(NULL), data, prev);
 	nextBlock.mineBlock(difficulty);
 	chain.push_back(nextBlock);
+	updateSize();
 }
+*/
 
-//check the validity of chain by recalculating hashes
+
 bool blockchain::isValid()
 {
 	for (int i = 1; i < chain.size(); i++)
@@ -65,20 +64,78 @@ bool blockchain::isValid()
 	return true;
 }
 
-//changes a block in the chain to "change" based on unique index
-void blockchain::changeBlock(int id, block change)
-{
-	chain[id]=change;
-}
 
-//access the chain
 vector<block> blockchain::getChain()
 {
 	return chain;
 }
 
-//mutate the chain
+
 void blockchain::setChain(vector<block> setTo)
 {
 	chain=setTo;
 }
+
+
+
+void blockchain::minePendingTransactions(string rewardAddress)
+{
+	block prevBlock = getLastBlock();
+	string prevHash = prevBlock.getCurrHash();
+	block newBlock(time(NULL), prevHash, pending);
+	newBlock.mineBlock(difficulty);
+	chain.push_back(newBlock);
+	cout<<"we have mined a block"<<endl;
+	
+	pending.clear();
+	//giving a reward to the block that succesfully mined the transactions
+	transaction newTransaction("", rewardAddress, miningReward);
+	pending.push_back(newTransaction);
+}
+
+
+void blockchain::addTransaction(transaction newTransaction)
+{
+	pending.push_back(newTransaction);
+}
+
+void blockchain::updateSize()
+{
+	blockchainSize=chain.size();
+}
+
+int blockchain::getSize()
+{
+	return blockchainSize;
+}
+
+int blockchain::getBalanceOfAddress(string address)
+{
+int result=0;
+vector<transaction> currTransactions;
+string fromAddress;
+string toAddress;
+int amount;
+for (int i = 0; i < chain.size(); i++)
+	{
+		currTransactions=chain[i].getTransactions();
+		for (int j = 0; j < currTransactions.size(); j++)
+		{
+			fromAddress=currTransactions[j].getFrom();	
+			toAddress=currTransactions[j].getTo();
+			amount=currTransactions[j].getAmount();
+			if (fromAddress==address)
+			{
+				result-=amount;
+			}
+			if (toAddress==address)
+			{
+				result+=amount;
+			}
+		}
+		currTransactions.clear();
+	}
+return result;
+
+}
+
