@@ -4,19 +4,29 @@
 //constructors
 block::block()
 {
-	transaction="";
+	vector<transaction> emptyTransactions;
+	transactions = emptyTransactions;
 	timestamp=time(NULL);
-	id=0;
 	prevHash="";
-	currHash="";
 	nonce=0;
+	currHash = calculateHash();
 }
 
-block::block(int i, time_t time, string data, string prev, int setnonce)
+block::block(time_t time, string prevHash, vector<transaction> setTransactions)
 {
-	id=i;
+
+transactions=setTransactions;
+timestamp=time;
+prevHash=prevHash;
+nonce=0;
+currHash = calculateHash();
+}
+
+
+block::block (time_t time, vector<transaction> setTransactions, string prev, int setnonce)
+{
 	timestamp=time;
-	transaction=data;
+	transactions=setTransactions;
 	prevHash=prev;
 	nonce=setnonce;
 	currHash = calculateHash();
@@ -28,9 +38,9 @@ string block::getPrevHash()
 	return prevHash;
 }
 
-string block::getTransaction()
+vector<transaction> block::getTransactions()
 {
-	return transaction;
+	return transactions;
 }
 
 string block::getCurrHash()
@@ -38,10 +48,6 @@ string block::getCurrHash()
 	return currHash;
 }
 
-int block::getid()
-{
-	return id;
-}
 
 time_t block::getTimestamp()
 {
@@ -64,9 +70,9 @@ void block::setCurrHash(string setCurr)
 	currHash=setCurr;
 }
 
-void block::setTransaction(string set)
+void block::setTransactions(vector<transaction> set)
 {
-	transaction=set;
+	transactions=set;
 }
 
 void block::setTimestamp(time_t setTime)
@@ -74,10 +80,6 @@ void block::setTimestamp(time_t setTime)
 	timestamp=setTime;
 }
 
-void block::setId(int setid)
-{
-	id=setid;
-}
 
 void block::setNonce(int newNonce)
 {
@@ -90,7 +92,15 @@ string block::calculateHash()
 {
 	//ADD prevHash, index, transaction(ie. data), timestamp. Hash this all using 
 	//ourhash - SHA3_256
-	string input =  prevHash + to_string(id) + to_string(timestamp) + transaction + to_string(nonce);
+	string input =  prevHash +  to_string(timestamp) + to_string(nonce);
+	for(int i = 0; i < transactions.size(); i++)
+	{
+		int amt=transactions[i].getAmount();
+		string from=transactions[i].getFrom();
+		string to=transactions[i].getTo();
+		input+=to_string(amt) + from + to;
+	}
+
 	return sha256(input);
 	
 }
@@ -113,6 +123,5 @@ void block::mineBlock(int difficulty)
 	}
 	
 	cout<<"We mined the block with hash: " << getCurrHash()<<endl;
-	cout<<"Having index: " << getid()<<endl;
 }
 
