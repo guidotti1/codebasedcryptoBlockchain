@@ -21,18 +21,20 @@ public:
 	//0 arg. constructor
 	block();
 	//4 arg. constructor
-	block(int i, long int time, string data, string prev, int setnonce);
+	block(long int time, vector<transaction> setTransaction, string prev, int setnonce);
+	//3 arg. contsructor
+	block(time_t time, string prevHash, vector<transaction> setTransactions);	
 	//accessor functions
 	string getPrevHash();
 	string getCurrHash();
-	string getTransaction();
+	vector<transaction> getTransactions();
 	time_t getTimestamp();
 	int getid();
 	int getNonce();
 	//mutator functions
 	void setPrevHash(string setPrev);
 	void setCurrHash(string setCurr);
-	void setTransaction(string set);
+	void setTransactions(vector<transaction> set);
 	void setTimestamp(time_t setTime);
 	void setId(int setid);
 	void setNonce(int newNonce);
@@ -48,12 +50,10 @@ private:
 	string prevHash;
 	//currhash is the hash for this block
 	string currHash;
-	//vector of strings stores information of transaction
-	string transaction;
+	//vector of transactions stores information of transactions
+	vector<transaction> transactions;
 	//unique timestamp based on when the block is created
 	time_t timestamp;	
-	//unique blockID
-	int id;
 	//random value used in the conext of mining
 	int nonce;
 
