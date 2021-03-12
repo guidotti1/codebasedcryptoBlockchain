@@ -22,16 +22,25 @@ public:
 	//access the most recent block
 	block getLastBlock();
 	//add a new block
-	void addBlock(int i, string data);
+	void addBlock(string data);
 	//check validity of the chain by comparing hashes
 	bool isValid();
-	//change a block based on id, change that id to changeBlock
-	void changeBlock(int id, block change);
 	//accessor for the chain
 	vector<block> getChain();
 	//mutator for the chain
 	void setChain(vector<block> setTo);
-
+	//send the reward for mining to rewardAddress
+	void minePendingTransactions(string rewardAddress);
+	//add a new transaction to pending transactions
+	void addTransaction(transaction newTransaction);
+	//accessor function for size
+	int getSize();
+	//increment size if a block is added
+	void updateSize();
+	//get the balance for a specific address by checking all transactions involving that address
+	int getBalanceOfAddress(string address);
+		
+	
 private:
 	//vector of blocks storing the chain
 	vector<block> chain;
@@ -40,7 +49,9 @@ private:
 	//stores all pending transactions in the chain
 	vector<transaction> pending;
 	//determines reward for mining;
-	int transactionReward;
+	int miningReward;
+	//number of elements in blockchain
+	int blockchainSize;
 	
 
 
