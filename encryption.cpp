@@ -35,13 +35,13 @@ output.open(fileName.c_str());
 output<<"q:=2;"<<endl;
 output<<"F:=GF(q);"<<endl;
 
-output<<"N:=2000;"<<endl;
-output<<"K:=1100;"<<endl;
-output<<"n:=1000;"<<endl;
-output<<"k:=160;"<<endl;
+output<<"N:="+N+";"<<endl;
+output<<"K:="+K+";"<<endl;
+output<<"n:="+n+";"<<endl;
+output<<"k:="+k+";"<<endl;
 
-output<<"t1:=90;"<<endl;
-output<<"t2:=110;"<<endl;
+output<<"t1:="+t1+;"<<endl;
+output<<"t2:="+t2+";"<<endl;
 
 output<<"//counter:=0;"<<endl;
 output<<"//for l in [1..1000] do"<<endl;
