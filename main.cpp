@@ -50,13 +50,13 @@ cout<<mychain.getBalanceOfAddress("myaddress")<<endl;
 
 
 //secure parameters for KKS signature as described by digital signature paper
-setq="2";
-setN="2000";
-setK="1100";
-setn="1000";
-setk="160";
-sett1="90";
-sett2="110";
+string setq="2";
+string setN="2000";
+string setK="1100";
+string setn="1000";
+string setk="160";
+string sett1="90";
+string sett2="110";
 encryption trial(setq, setN, setK, setn, setk, sett1, sett2);
 	
 unsigned int microsecond = 1000000;
