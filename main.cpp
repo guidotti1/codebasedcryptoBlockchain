@@ -49,14 +49,32 @@ cout<<"Checking again"<<endl;
 cout<<mychain.getBalanceOfAddress("myaddress")<<endl;
 
 
-encryption trial;
-trial.createMagmaFile();
+//secure parameters for KKS signature as described by digital signature paper
+setq="2";
+setN="2000";
+setK="1100";
+setn="1000";
+setk="160";
+sett1="90";
+sett2="110";
+encryption trial(setq, setN, setK, setn, setk, sett1, sett2);
 	
-trial.runMagmaFile();
 unsigned int microsecond = 1000000;
+	
+trial.createPublicPrivateKey();
+trial.runMagmaFile("1");
 usleep(3 * microsecond);//sleeps for 3 seconds
+trial.readPublicPrivateKey();
 
-trial.readInput();
+trial.setMessage("1011110110000111011001101110110001110001100101000110101111001011000011101001111011101100010001100011010001010101001101101111000000110011011100101111110101100001");
+trial.signMessage();
+usleep(3 * microsecond);
+trial.runMagmaFile("2");
+	
+	
+//trial.verifySignature();
+//usleep(3 * microsecond);
+//trial.runMagmaFile("3");
 
 
 
