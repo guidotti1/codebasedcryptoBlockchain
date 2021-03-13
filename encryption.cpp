@@ -8,6 +8,20 @@ ourPublic = defaultPublic;
 ourPrivate = defaultPrivate;
 }
 
+encryption::encryption(string setN, string setK, string setn, string setk, string sett1, string sett2)
+{
+publickey defaultPublic;
+privatekey defaultPrivate;
+ourPublic = defaultPublic;
+ourPrivate = defaultPrivate;
+N=setN;
+K=setK;
+n=setn;
+k=setk;
+t1=sett1;
+t2=sett2;
+}
+
 
 void encryption::createMagmaFile()
 {
