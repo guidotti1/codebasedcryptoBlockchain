@@ -29,7 +29,7 @@ private:
 	string n;
 	string k;
 	string t1;
-	string t1;
+	string t2;
 	
 
 public:
