@@ -50,7 +50,7 @@ output<<"K:="+K+";"<<endl;
 output<<"n:="+n+";"<<endl;
 output<<"k:="+k+";"<<endl;
 
-output<<"t1:="+t1+;"<<endl;
+output<<"t1:="+t1+";"<<endl;
 output<<"t2:="+t2+";"<<endl;
 
 output<<"//counter:=0;"<<endl;
@@ -380,18 +380,19 @@ void encryption::setMessage(string ourMessage)
 }
 
 
-void encryption::verifySignature(string omega)
+void encryption::verifySignature()
 {
 
-vector<vector<int> > usedH = ourpublic.getH();
+vector<vector<int> > usedH = ourPublic.getH();
 int HNumRows = usedH.size();
 int HNumColumns = usedH[1].size();
 string filename = "verifyMessage.txt";
+ofstream output;
 output.open(filename.c_str());
 output<<"q:="+q+";"<<endl;
 output<<"F:=GF(q);"<<endl;
 output<<"H:=RandomMatrix(F, "+to_string(HNumRows)+", "+to_string(HNumColumns)+");"<<endl;
-output<<"for i in [1.."+to_string(HNumrows)+"] do"<<endl;
+output<<"for i in [1.."+to_string(HNumRows)+"] do"<<endl;
 output<<"	for j in [1.."+to_string(HNumColumns)+"] do "<<endl;
 output<<"	end for;"<<endl;
 output<<"end for;"<<endl;
@@ -421,7 +422,7 @@ output<<"if ((verifiedOne eq true) and (verifiedTwo eq true)) then"<<endl;
 output<<"    print "verification was succesful";"<<endl;
  output<<"   //counter:=counter+1;"<<endl;
 output<<"else"<<endl;
-output<<"    print "verification was a failure";"<<endl;
+output<<"    print \"verification was a failure\";"<<endl;
     
 output<<"end if;"<<endl;
 output.close();
