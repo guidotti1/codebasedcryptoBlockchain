@@ -166,27 +166,27 @@ int count=0;
 vector<int> temp;
 for (int i = 0; i <  lines.size(); i++)
 {
-	cout<<"parsing the line " << lines[i]<<endl;
+	//cout<<"parsing the line " << lines[i]<<endl;
 	if (lines[i] == "delimiter")
 	{
-		cout<<"reading next"<<endl;
+		//cout<<"reading next"<<endl;
 		count++;
-		cout<<"count "<<count<<endl;
+		//cout<<"count "<<count<<endl;
 		continue;
 	}
 	if (lines[i].substr(0, 5) == "Magma")
 	{
-		cout<<"passing first line"<<endl;
+		//cout<<"passing first line"<<endl;
 		continue;
 	}
 	if (lines[i] == "Type ? for help.  Type <Ctrl>-D to quit.")
 	{
-		cout<<"passing second line"<<endl;
+		//cout<<"passing second line"<<endl;
 		continue;
 	}
 	if (lines[i].substr(0,5) == "Total")
 	{
-		cout<<"last line"<<endl;
+		//cout<<"last line"<<endl;
 		continue;
 	}
 	else 
@@ -267,7 +267,7 @@ for (int i = 0; i <  lines.size(); i++)
 	
 }
 
-
+/*
 cout<<"let's go through set F matrix"<<endl;
 for (int i =  0;  i <setF.size(); i++)
 {
@@ -301,13 +301,10 @@ for (int i =  0;  i <setG.size(); i++)
 	}
 	cout<<endl<<endl<<endl;
 }
+*/
 
 
 setKeys(setG, setH, setF, setJ);
-cout<<"keys have been set"<<endl;
-cout<<"set G should have : "<<setG.size()<<" rows"<<endl;
-vector<vector<int> > usedG = ourPrivate.getG();
-cout<<"GNumrows: "<<usedG.size()<<endl;
 }
 
 void encryption::signMessage()
@@ -315,39 +312,57 @@ void encryption::signMessage()
 
 vector<vector<int> > usedG = ourPrivate.getG();
 vector<int> usedJ = ourPrivate.getJ();
-cout<<"here123"<<endl;
 int GNumRows = usedG.size();
-cout<<"GNumRows: "<<GNumRows<<endl;
 int GNumColumns = usedG[0].size();
-cout<<"here"<<endl;
 ofstream output;
 string filename = "signMessage.txt";
 output.open(filename.c_str());
 output<<"q := "+q+";"<<endl;
 output<<"F := GF(q);"<<endl;
 output<<"G := RandomMatrix(F, "+to_string(GNumRows)+", "+to_string(GNumColumns)+");"<<endl;
+output<<"V := VectorSpace(F, "+to_string(GNumColumns)+");"<<endl;
 string nextRow="";
 for (int i = 0; i < GNumRows; i++)
 {
+	nextRow+='[';
 	for (int j = 0;  j < GNumColumns; j++)
 	{
 		nextRow+= to_string(usedG[i][j]);
+		if (j < GNumColumns-1)
+		{
+		nextRow+= ',';
+		nextRow+= ' ';
+		}
 	}
-	output<<"G["+to_string(i)+"] := "+nextRow+";"<<endl;
+	nextRow+= ']';
+	output<<"G["+to_string(i+1)+"] := V!"+nextRow+";"<<endl;
 	nextRow="";
 }
 output<<"J:=[];"<<endl;
 for (int i = 0; i  < usedJ.size(); i++)
 {
-	output<<"J["+to_string(i)+"] := "+to_string(usedJ[i])+";"<<endl;
+	output<<"J["+to_string(i+1)+"] := "+to_string(usedJ[i])+";"<<endl;
 }
-output<<"x := "+message+";"<<endl;
+output<<"messageSpace:=VectorSpace(F, "+k+");"<<endl;
+string ourMessage="";
+ourMessage+= "[";
+for (int i = 0; i < message.size(); i++)
+{
+	ourMessage+= message[i];
+	if (i < message.size()-1)
+	{
+		ourMessage+= ',';
+		ourMessage+= ' ';
+	}
+}
+ourMessage+=']';
+output<<"x := messageSpace!"+ourMessage+";"<<endl;
 output<<"xG := x*G;"<<endl;
 
 output<<"omegaSpace:=VectorSpace(F, "+N+");"<<endl;
 output<<"omega:=Random(omegaSpace);"<<endl;
 output<<"jCounter := 1;"<<endl;
-output<<"for i in [1..N] do"<<endl;
+output<<"for i in [1..+"+N+"] do"<<endl;
 output<<"    if (jCounter eq (#J+1)) then    "<<endl;
 output<<"        break;   "<<endl;
 output<<"    end if;"<<endl;
