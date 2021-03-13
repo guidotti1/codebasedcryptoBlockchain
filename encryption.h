@@ -22,11 +22,20 @@ private:
 	//vector<string> allFileNames;
 	
 	string message;
+	//parameters used for the KKS signature algorithm
+	string N;
+	string K;
+	string n;
+	string k;
+	string t1;
+	string t1;
 	
 
 public:
 	//0 arg constructor
 	encryption();
+	//6 arg constructor used to set parameters for KKS signature algorithm
+	encryption(string setN, string setK, string setn, string setk, string sett1, string sett2);
 	//create the magma file to run
 	void createMagmaFile();
 	//run magma file
