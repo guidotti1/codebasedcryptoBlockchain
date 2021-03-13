@@ -150,7 +150,7 @@ output.close();
 void encryption::runMagmaFile()
 {
 
-system("nohup magma<createPublicPrivateKey.txt> _output.txt");
+system("nohup magma<createPublicPrivateKey.txt> output.txt");
 }
         
         
