@@ -166,7 +166,7 @@ int count=0;
 vector<int> temp;
 for (int i = 0; i <  lines.size(); i++)
 {
-	//cout<<"parsing the line " << lines[i]<<endl;
+	cout<<"parsing the line " << lines[i]<<endl;
 	if (lines[i] == "delimiter")
 	{
 		cout<<"reading next"<<endl;
@@ -196,11 +196,11 @@ for (int i = 0; i <  lines.size(); i++)
 		{
 			if (count==0)
 			{
-				if ((lines[i][j] == '(') || (lines[i][j]==' '))
+				if ((lines[i][j] == '[') || (lines[i][j]==' '))
 				{
 					continue;
 				}
-				else if (lines[i][j] == ')')
+				else if (lines[i][j] == ']')
 				{
 					setF.push_back(temp);
 					temp.clear();
@@ -214,11 +214,11 @@ for (int i = 0; i <  lines.size(); i++)
 			}
 			else if (count==1)
 			{
-				if ((lines[i][j] == '(') || (lines[i][j]==' '))
+				if ((lines[i][j] == '[') || (lines[i][j]==' '))
 				{
 					continue;
 				}
-				else if (lines[i][j] == ')')
+				else if (lines[i][j] == ']')
 				{
 					setH.push_back(temp);
 					temp.clear();
@@ -248,11 +248,11 @@ for (int i = 0; i <  lines.size(); i++)
 			}
 			else if (count==3)
 			{
-				if ((lines[i][j] == '(') || (lines[i][j]==' '))
+				if ((lines[i][j] == '[') || (lines[i][j]==' '))
 				{
 					continue;
 				}
-				else if (lines[i][j] == ')')
+				else if (lines[i][j] == ']')
 				{
 					setG.push_back(temp);
 					temp.clear();
@@ -267,7 +267,7 @@ for (int i = 0; i <  lines.size(); i++)
 	
 }
 
-/*
+
 cout<<"let's go through set F matrix"<<endl;
 for (int i =  0;  i <setF.size(); i++)
 {
@@ -301,9 +301,13 @@ for (int i =  0;  i <setG.size(); i++)
 	}
 	cout<<endl<<endl<<endl;
 }
-*/
+
 
 setKeys(setG, setH, setF, setJ);
+cout<<"keys have been set"<<endl;
+cout<<"set G should have : "<<setG.size()<<" rows"<<endl;
+vector<vector<int> > usedG = ourPrivate.getG();
+cout<<"GNumrows: "<<usedG.size()<<endl;
 }
 
 void encryption::signMessage()
@@ -313,6 +317,7 @@ vector<vector<int> > usedG = ourPrivate.getG();
 vector<int> usedJ = ourPrivate.getJ();
 cout<<"here123"<<endl;
 int GNumRows = usedG.size();
+cout<<"GNumRows: "<<GNumRows<<endl;
 int GNumColumns = usedG[0].size();
 cout<<"here"<<endl;
 ofstream output;
