@@ -55,8 +55,7 @@ public:
 	void readVerification();
 
 	//mutator functions
-	void setPublicKey(publickey setPublic);
-	void setPrivateKey(privatekey setPrivate);
+	void setKeys(vector<vector<int> > G, vector<vector<int> > H, vector<vector<int> > F, vector<int> J)
 	void setMessage(string ourMessage);
 	
 
