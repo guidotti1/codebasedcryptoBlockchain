@@ -84,52 +84,6 @@ output<<"print \"delimiter\";"<<endl;
 output<<"PrivateKey[2];"<<endl;
 
 /*
-output<<"messageSpace:=VectorSpace(F, k);"<<endl;
-output<<"x := Random(messageSpace);"<<endl;
-output<<"xG := x*G;"<<endl;
-output<<"omegaSpace:=VectorSpace(F, N);"<<endl;
-output<<"omega:=Random(omegaSpace);"<<endl;
-output<<"jCounter := 1;"<<endl;
-output<<"for i in [1..N] do"<<endl;
-output<<"    if (jCounter eq (#J+1)) then    "<<endl;
-output<<"        break;   "<<endl;
-output<<"    end if;"<<endl;
-output<<"    if (J[jCounter] eq i) then"<<endl;
-output<<"        omega[i]:= xG[jCounter];"<<endl;
-output<<"        jCounter:=jCounter+1;"<<endl;
-output<<"    else"<<endl;
-output<<"        omega[i]:=F!0;"<<endl;
-output<<"    end if;"<<endl;
-output<<"end for; "<<endl;
-output<<"omegaMatrix:=RandomMatrix(F, 1, N);"<<endl;
-output<<"omegaMatrix[1]:=omega;"<<endl;
-output<<"xMatrix:=RandomMatrix(F, 1, k);"<<endl;
-output<<"xMatrix[1]:=x;"<<endl;
-output<<"HomegaT := H*Transpose(omegaMatrix);"<<endl;
-output<<"FxT := FMatrix*Transpose(xMatrix);"<<endl;
-output<<"verifiedOne:=true;"<<endl;
-output<<"if (HomegaT eq FxT) then"<<endl;
-output<<"    verifiedOne:=true;"<<endl;
-output<<"else "<<endl;
-output<<"    verifiedOne:=false; "<<endl;
-output<<"    //print \"one fails\";"<<endl;
-output<<"end if;"<<endl;
-output<<"verifiedTwo:=true;"<<endl;
-output<<"if (Weight(omega) lt 520) then"<<endl;
-output<<"    if (Weight(omega) gt 480) then"<<endl;
-output<<"        verifiedTwo:=true;    "<<endl;
-output<<"    else"<<endl;
-output<<"        verifiedTwo:=false;"<<endl;
-output<<"        //print\"two fails\";"<<endl;
-output<<"    end if;"<<endl;
-output<<"end if;"<<endl;
-output<<"if ((verifiedOne eq true) and (verifiedTwo eq true)) then"<<endl;
-output<<"    print "verification was succesful";"<<endl;
- output<<"   //counter:=counter+1;"<<endl;
-output<<"else"<<endl;
-output<<"    print "verification was a failure";"<<endl;
-    
-output<<"end if;"<<endl;
 output<<"//end for;"<<endl;
 output<<"//print\"number successes\";"<<endl;
 output<<"//counter;"<<endl;
@@ -389,5 +343,42 @@ void encryption::setMessage(string ourMessage)
 	message=ourMessage;
 }
 
+
+void encryption::verifyMessage()
+{
+
+output<<"omegaMatrix:=RandomMatrix(F, 1, N);"<<endl;
+output<<"omegaMatrix[1]:=omega;"<<endl;
+output<<"xMatrix:=RandomMatrix(F, 1, k);"<<endl;
+output<<"xMatrix[1]:=x;"<<endl;
+output<<"HomegaT := H*Transpose(omegaMatrix);"<<endl;
+output<<"FxT := FMatrix*Transpose(xMatrix);"<<endl;
+output<<"verifiedOne:=true;"<<endl;
+output<<"if (HomegaT eq FxT) then"<<endl;
+output<<"    verifiedOne:=true;"<<endl;
+output<<"else "<<endl;
+output<<"    verifiedOne:=false; "<<endl;
+output<<"    //print \"one fails\";"<<endl;
+output<<"end if;"<<endl;
+output<<"verifiedTwo:=true;"<<endl;
+output<<"if (Weight(omega) lt 520) then"<<endl;
+output<<"    if (Weight(omega) gt 480) then"<<endl;
+output<<"        verifiedTwo:=true;    "<<endl;
+output<<"    else"<<endl;
+output<<"        verifiedTwo:=false;"<<endl;
+output<<"        //print\"two fails\";"<<endl;
+output<<"    end if;"<<endl;
+output<<"end if;"<<endl;
+output<<"if ((verifiedOne eq true) and (verifiedTwo eq true)) then"<<endl;
+output<<"    print "verification was succesful";"<<endl;
+ output<<"   //counter:=counter+1;"<<endl;
+output<<"else"<<endl;
+output<<"    print "verification was a failure";"<<endl;
+    
+output<<"end if;"<<endl;
+
+
+
+}
 
 
