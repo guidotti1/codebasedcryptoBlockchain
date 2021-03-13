@@ -324,6 +324,7 @@ output<<"    else"<<endl;
 output<<"        omega[i]:=F!0;"<<endl;
 output<<"    end if;"<<endl;
 output<<"end for; "<<endl;
+output.close();
 
 }
 
@@ -347,6 +348,8 @@ void encryption::setMessage(string ourMessage)
 void encryption::verifyMessage()
 {
 
+string filename = "verifyMessage.txt";
+output.open(filename.c_str());
 output<<"omegaMatrix:=RandomMatrix(F, 1, N);"<<endl;
 output<<"omegaMatrix[1]:=omega;"<<endl;
 output<<"xMatrix:=RandomMatrix(F, 1, k);"<<endl;
@@ -376,6 +379,7 @@ output<<"else"<<endl;
 output<<"    print "verification was a failure";"<<endl;
     
 output<<"end if;"<<endl;
+output.close();
 
 
 
