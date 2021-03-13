@@ -419,7 +419,7 @@ output<<"        //print\"two fails\";"<<endl;
 output<<"    end if;"<<endl;
 output<<"end if;"<<endl;
 output<<"if ((verifiedOne eq true) and (verifiedTwo eq true)) then"<<endl;
-output<<"    print "verification was succesful";"<<endl;
+output<<"    print \"verification was succesful\";"<<endl;
  output<<"   //counter:=counter+1;"<<endl;
 output<<"else"<<endl;
 output<<"    print \"verification was a failure\";"<<endl;
