@@ -87,7 +87,6 @@ output<<"PrivateKey[2];"<<endl;
 output<<"messageSpace:=VectorSpace(F, k);"<<endl;
 output<<"x := Random(messageSpace);"<<endl;
 output<<"xG := x*G;"<<endl;
-
 output<<"omegaSpace:=VectorSpace(F, N);"<<endl;
 output<<"omega:=Random(omegaSpace);"<<endl;
 output<<"jCounter := 1;"<<endl;
@@ -102,15 +101,12 @@ output<<"    else"<<endl;
 output<<"        omega[i]:=F!0;"<<endl;
 output<<"    end if;"<<endl;
 output<<"end for; "<<endl;
-
 output<<"omegaMatrix:=RandomMatrix(F, 1, N);"<<endl;
 output<<"omegaMatrix[1]:=omega;"<<endl;
 output<<"xMatrix:=RandomMatrix(F, 1, k);"<<endl;
 output<<"xMatrix[1]:=x;"<<endl;
 output<<"HomegaT := H*Transpose(omegaMatrix);"<<endl;
 output<<"FxT := FMatrix*Transpose(xMatrix);"<<endl;
-
-
 output<<"verifiedOne:=true;"<<endl;
 output<<"if (HomegaT eq FxT) then"<<endl;
 output<<"    verifiedOne:=true;"<<endl;
@@ -118,7 +114,6 @@ output<<"else "<<endl;
 output<<"    verifiedOne:=false; "<<endl;
 output<<"    //print \"one fails\";"<<endl;
 output<<"end if;"<<endl;
-
 output<<"verifiedTwo:=true;"<<endl;
 output<<"if (Weight(omega) lt 520) then"<<endl;
 output<<"    if (Weight(omega) gt 480) then"<<endl;
@@ -128,7 +123,6 @@ output<<"        verifiedTwo:=false;"<<endl;
 output<<"        //print\"two fails\";"<<endl;
 output<<"    end if;"<<endl;
 output<<"end if;"<<endl;
-
 output<<"if ((verifiedOne eq true) and (verifiedTwo eq true)) then"<<endl;
 output<<"    print "verification was succesful";"<<endl;
  output<<"   //counter:=counter+1;"<<endl;
@@ -136,10 +130,7 @@ output<<"else"<<endl;
 output<<"    print "verification was a failure";"<<endl;
     
 output<<"end if;"<<endl;
-
-
 output<<"//end for;"<<endl;
-
 output<<"//print\"number successes\";"<<endl;
 output<<"//counter;"<<endl;
 */
@@ -186,7 +177,7 @@ int count=0;
 vector<int> temp;
 for (int i = 0; i <  lines.size(); i++)
 {
-	cout<<"parsing the line " << lines[i]<<endl;
+	//cout<<"parsing the line " << lines[i]<<endl;
 	if (lines[i] == "delimiter")
 	{
 		cout<<"reading next"<<endl;
@@ -204,7 +195,7 @@ for (int i = 0; i <  lines.size(); i++)
 		cout<<"passing second line"<<endl;
 		continue;
 	}
-	if (lines[i]substr(0,5) == "Total")
+	if (lines[i].substr(0,5) == "Total")
 	{
 		cout<<"last line"<<endl;
 		continue;
@@ -297,7 +288,6 @@ for (int i =  0;  i <setF.size(); i++)
 	}
 	cout<<endl<<endl<<endl;
 }
-
 cout<<"let's go through set H matrix"<<endl;
 for (int i =  0;  i <setH.size(); i++)
 {
@@ -307,14 +297,12 @@ for (int i =  0;  i <setH.size(); i++)
 	}
 	cout<<endl<<endl<<endl;
 }
-
 cout<<"let's go through set J vector "<<endl;
 for (int i = 0; i < setJ.size(); i++)
 {
 	cout<<setJ[i]<<" ";
 }
 cout<<endl;
-
 cout<<"let's go through set G matrix"<<endl;
 for (int i =  0;  i <setG.size(); i++)
 {
@@ -400,8 +388,6 @@ void encryption::setMessage(string ourMessage)
 {
 	message=ourMessage;
 }
-
-
 
 
 
