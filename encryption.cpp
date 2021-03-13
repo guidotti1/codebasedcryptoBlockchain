@@ -2,28 +2,38 @@
 
 encryption::encryption()
 {
-publickey defaultPublic;
-privatekey defaultPrivate;
-ourPublic = defaultPublic;
-ourPrivate = defaultPrivate;
+	publickey defaultPublic;
+	privatekey defaultPrivate;
+	ourPublic = defaultPublic;
+	ourPrivate = defaultPrivate;
+	message="";
+	q="";
+	N="";
+	K="";
+	n="";
+	k="";
+	t1="";
+	t2="";
 }
 
-encryption::encryption(string setN, string setK, string setn, string setk, string sett1, string sett2)
+encryption::encryption(string setq, string setN, string setK, string setn, string setk, string sett1, string sett2)
 {
-publickey defaultPublic;
-privatekey defaultPrivate;
-ourPublic = defaultPublic;
-ourPrivate = defaultPrivate;
-N=setN;
-K=setK;
-n=setn;
-k=setk;
-t1=sett1;
-t2=sett2;
+	publickey defaultPublic;
+	privatekey defaultPrivate;
+	ourPublic = defaultPublic;
+	ourPrivate = defaultPrivate;
+	message="";
+	q=setq;
+	N=setN;
+	K=setK;
+	n=setn;
+	k=setk;
+	t1=sett1;
+	t2=sett2;
 }
 
 
-void encryption::createMagmaFile()
+void encryption::createPublicPrivateKey()
 {
 //KKS digital signatures-  ATTEMPT TWO
 //seems to work roughly 60% of the time
@@ -32,7 +42,7 @@ string fileName = "createPublicPrivateKey.txt";
 ofstream output;
 output.open(fileName.c_str());
 
-output<<"q:=2;"<<endl;
+output<<"q:="+q+";"<<endl;
 output<<"F:=GF(q);"<<endl;
 
 output<<"N:="+N+";"<<endl;
@@ -106,14 +116,25 @@ output.close();
 }
 
 
-void encryption::runMagmaFile()
+void encryption::runMagmaFile(string pass)
 {
+if (pass == "1")
+{
+	system("nohup magma<createPublicPrivateKey.txt> output.txt");
+}
+else if (pass == "2")
+{
+	system("nohup magma<signMessage.txt> signMessageOutput.txt");
+}
+else if (pass== "3")
+{
+	system("nohup magma<verifyMessage.txt> verifyMessageOutput.txt");
+}
 
-system("nohup magma<createPublicPrivateKey.txt> output.txt");
 }
         
         
-void encryption::readInput()
+void encryption::readPublicPrivateKey()
 {
 string next;
 vector<string> lines;
@@ -303,7 +324,7 @@ int GNumColumns = usedG[0].size();
 ofstream output;
 string filename = "signMessage.txt";
 output.open(filename.c_str());
-output<<"q := 2;"<<endl;
+output<<"q := "+q+";"<<endl;
 output<<"F := GF(q);"<<endl;
 output<<"G := RandomMatrix(F, "+to_string(GNumRows)+", "+to_string(GNumColumns)+");"<<endl;
 string nextRow="";
@@ -324,7 +345,7 @@ for (int i = 0; i  < usedJ.size(); i++)
 output<<"x := "+message+";"<<endl;
 output<<"xG := x*G;"<<endl;
 
-output<<"omegaSpace:=VectorSpace(F, N);"<<endl;
+output<<"omegaSpace:=VectorSpace(F, "+N+");"<<endl;
 output<<"omega:=Random(omegaSpace);"<<endl;
 output<<"jCounter := 1;"<<endl;
 output<<"for i in [1..N] do"<<endl;
@@ -359,14 +380,24 @@ void encryption::setMessage(string ourMessage)
 }
 
 
-void encryption::verifyMessage()
+void encryption::verifySignature(string omega)
 {
 
+vector<vector<int> > usedH = ourpublic.getH();
+int HNumRows = usedH.size();
+int HNumColumns = usedH[1].size();
 string filename = "verifyMessage.txt";
 output.open(filename.c_str());
-output<<"omegaMatrix:=RandomMatrix(F, 1, N);"<<endl;
+output<<"q:="+q+";"<<endl;
+output<<"F:=GF(q);"<<endl;
+output<<"H:=RandomMatrix(F, "+to_string(HNumRows)+", "+to_string(HNumColumns)+");"<<endl;
+output<<"for i in [1.."+to_string(HNumrows)+"] do"<<endl;
+output<<"	for j in [1.."+to_string(HNumColumns)+"] do "<<endl;
+output<<"	end for;"<<endl;
+output<<"end for;"<<endl;
+output<<"omegaMatrix:=RandomMatrix(F, 1, "+N+");"<<endl;
 output<<"omegaMatrix[1]:=omega;"<<endl;
-output<<"xMatrix:=RandomMatrix(F, 1, k);"<<endl;
+output<<"xMatrix:=RandomMatrix(F, 1, "+k+");"<<endl;
 output<<"xMatrix[1]:=x;"<<endl;
 output<<"HomegaT := H*Transpose(omegaMatrix);"<<endl;
 output<<"FxT := FMatrix*Transpose(xMatrix);"<<endl;
