@@ -54,7 +54,7 @@ trial.createMagmaFile();
 	
 trial.runMagmaFile();
 unsigned int microsecond = 1000000;
-usleep(15 * microsecond);//sleeps for 15 seconds
+usleep(3 * microsecond);//sleeps for 3 seconds
 
 trial.readInput();
 
