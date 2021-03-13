@@ -169,7 +169,7 @@ if (myfile.is_open())
 }
 else
 {
-	cout<<"failed to open .txt file"<<endl;
+	cout<<"failed to open output.txt file"<<endl;
 	return;
 }
 
@@ -189,7 +189,24 @@ for (int i = 0; i <  lines.size(); i++)
 	cout<<"parsing the line " << lines[i]<<endl;
 	if (lines[i] == "delimiter")
 	{
+		cout<<"reading next"<<endl;
 		count++;
+		cout<<"count "<<count<<endl;
+		continue;
+	}
+	if (lines[i] == "Magma V2.23-10    Fri Mar 12 2021 19:07:06 on supercomputer [Seed = 456620312]")
+	{
+		cout<<"passing first line"<<endl;
+		continue;
+	}
+	if (lines[i] == "Type ? for help.  Type <Ctrl>-D to quit.")
+	{
+		cout<<"passing second line"<<endl;
+		continue;
+	}
+	if (lines[i]substr(0,5) == "Total")
+	{
+		cout<<"last line"<<endl;
 		continue;
 	}
 	else 
