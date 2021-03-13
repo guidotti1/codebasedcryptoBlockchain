@@ -303,15 +303,7 @@ for (int i =  0;  i <setG.size(); i++)
 }
 */
 
-publickey newPublic;
-newPublic.setFMatrix(setF);
-newPublic.setHMatrix(setH);
-setPublicKey(newPublic);
-
-privatekey newPrivate;
-newPrivate.setJVector(setJ);
-newPrivate.setGMatrix(setG);
-setPrivateKey(newPrivate);
+setKeys(vector<vector<int> > setG, vector<vector<int> > setH, vector<vector<int> > setF, vector<int> setJ);
 }
 
 void encryption::signMessage()
@@ -319,8 +311,10 @@ void encryption::signMessage()
 
 vector<vector<int> > usedG = ourPrivate.getG();
 vector<int> usedJ = ourPrivate.getJ();
+cout<<"here123"<<endl;
 int GNumRows = usedG.size();
 int GNumColumns = usedG[0].size();
+cout<<"here"<<endl;
 ofstream output;
 string filename = "signMessage.txt";
 output.open(filename.c_str());
@@ -364,14 +358,12 @@ output.close();
 }
 
 
-void encryption::setPublicKey(publickey setPublic)
+void encryption::setKeys(vector<vector<int> > G, vector<vector<int> > H, vector<vector<int> > F, vector<int> J)
 {
-	ourPublic=setPublic;
-}
-
-void encryption::setPrivateKey(privatekey setPrivate)
-{
-	ourPrivate=setPrivate;
+	ourPrivate.setJVector(J);
+	ourPrivate.setGMatrix(G);
+	ourPublic.setFMatrix(F);
+	ourPublic.setHMatrix(H);
 }
 
 void encryption::setMessage(string ourMessage)
