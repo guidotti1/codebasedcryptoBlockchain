@@ -185,7 +185,7 @@ for (int i = 0; i <  lines.size(); i++)
 		cout<<"count "<<count<<endl;
 		continue;
 	}
-	if (lines[i] == "Magma V2.23-10    Fri Mar 12 2021 19:07:06 on supercomputer [Seed = 456620312]")
+	if (lines[i].substr(0, 5) == "Magma")
 	{
 		cout<<"passing first line"<<endl;
 		continue;
