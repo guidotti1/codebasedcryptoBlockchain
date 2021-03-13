@@ -303,7 +303,7 @@ for (int i =  0;  i <setG.size(); i++)
 }
 */
 
-setKeys(vector<vector<int> > setG, vector<vector<int> > setH, vector<vector<int> > setF, vector<int> setJ);
+setKeys(setG, setH, setF, setJ);
 }
 
 void encryption::signMessage()
