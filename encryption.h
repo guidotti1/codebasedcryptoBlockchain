@@ -23,6 +23,7 @@ private:
 	
 	string message;
 	//parameters used for the KKS signature algorithm
+	string q;
 	string N;
 	string K;
 	string n;
@@ -34,18 +35,25 @@ private:
 public:
 	//0 arg constructor
 	encryption();
-	//6 arg constructor used to set parameters for KKS signature algorithm
-	encryption(string setN, string setK, string setn, string setk, string sett1, string sett2);
-	//create the magma file to run
-	void createMagmaFile();
-	//run magma file
-	void runMagmaFile();
-	//read input from text
-	void readInput();
-	//sign a binary message
+	//7 arg constructor used to set parameters for KKS signature algorithm
+	encryption(string setq, string setN, string setK, string setn, string setk, string sett1, string sett2);
+	//create the magma file to run (this program creates public/ private key)
+	void createPublicPrivateKey();
+	//create a magma file to sign a binary message
 	void signMessage();
-	//verify a signed message
-	void verifyMessage();
+	//create a magma file to verify a signed message
+	void verifySignature();
+	//run magma file
+	//pass variable signifies which file we run (1 : creation of public/private key
+	//2 : signing of message, 3 : verification of signature)
+	void runMagmaFile(string pass);
+	//read input from output of public/private key program
+	void readPublicPrivateKey();
+	//read input from output of signature program
+	void readSignature();
+	//read input from output of verification program
+	void readVerification();
+
 	//mutator functions
 	void setPublicKey(publickey setPublic);
 	void setPrivateKey(privatekey setPrivate);
