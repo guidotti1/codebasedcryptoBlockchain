@@ -7,6 +7,7 @@
 #include"encryption.h"
 #include<stdlib.h>
 
+
 using namespace std;
 
 int main()
@@ -50,6 +51,9 @@ cout<<mychain.getBalanceOfAddress("myaddress")<<endl;
 
 encryption trial;
 trial.createMagmaFile();
+	
+trial.runMagmaFile();
+sleep(15000);
 
 trial.readInput();
 
