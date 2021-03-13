@@ -6,7 +6,7 @@
 #include"transaction.h"
 #include"encryption.h"
 #include<stdlib.h>
-
+#include<unistd.h>
 
 using namespace std;
 
@@ -53,7 +53,8 @@ encryption trial;
 trial.createMagmaFile();
 	
 trial.runMagmaFile();
-sleep(15000);
+unsigned int microsecond = 1000000;
+usleep(15 * microsecond);//sleeps for 15 seconds
 
 trial.readInput();
 
@@ -67,8 +68,6 @@ cout<<"We are going to create a simple blockchain with " << desiredNumberBlocks 
 //cout<<"All that we ask is that you enter in some mock data for each transaction "<<endl;
 vector<int> amounts;
 int nextamt;
-
-
 while (mychain.getSize() != desiredNumberBlocks)
 {
 	amounts.clear();
@@ -83,11 +82,8 @@ while (mychain.getSize() != desiredNumberBlocks)
 	string rewardAddress = rewardBlock.getPrevHash();
 	transaction nextTransction(rewardAddress, nextamt)
 	mychain.minePendingTransactions();
-
 }
 string nextAmount;
-
-
 for (int i = 1; i < desiredNumberBlocks; i++)
 {
 	blockID++;
@@ -98,15 +94,8 @@ for (int i = 1; i < desiredNumberBlocks; i++)
 	block recentBlock = mychain.getLastBlock();
 	//create new block using unique ID and transaction you just entered
 	mychain.addBlock(nextAmount);
-
-
 	block nextBlock=mychain.getLastBlock();
 }
-
-
-
-
-
 if (mychain.isValid())
 {
 	cout<<"great job your blockchain is valid "<<endl;
