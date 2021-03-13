@@ -66,9 +66,12 @@ trial.runMagmaFile("1");
 usleep(3 * microsecond);//sleeps for 3 seconds
 trial.readPublicPrivateKey();
 
+cout<<"setting message"<<endl;
 trial.setMessage("1011110110000111011001101110110001110001100101000110101111001011000011101001111011101100010001100011010001010101001101101111000000110011011100101111110101100001");
+cout<<"signing message"<<endl;
 trial.signMessage();
 usleep(3 * microsecond);
+cout<<"running sign message program"<<endl;
 trial.runMagmaFile("2");
 	
 	
