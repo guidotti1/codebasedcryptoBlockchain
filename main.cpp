@@ -55,30 +55,46 @@ string setN="2000";
 string setK="1100";
 string setn="1000";
 string setk="160";
+//string setk="256";//maybe I can do it with k=256? sha-256 gives 64 characters - 512 in binary. so I can do in two passes
 string sett1="90";
 string sett2="110";
 encryption trial(setq, setN, setK, setn, setk, sett1, sett2);
-	
+trial.setMessage("1101100110110110111010001100110001001000110001100001000000111001110010011110111111110010100010011011000000100110010000110010100010011101000001110001000000111110");	
 unsigned int microsecond = 1000000;
 	
-trial.createPublicPrivateKey();
-trial.runMagmaFile("1");
-usleep(3 * microsecond);//sleeps for 3 seconds
-trial.readPublicPrivateKey();
 
-cout<<"setting message"<<endl;
-trial.setMessage("1011110110000111011001101110110001110001100101000110101111001011000011101001111011101100010001100011010001010101001101101111000000110011011100101111110101100001");
-cout<<"signing message"<<endl;
-trial.signMessage();
-cout<<"running sign message program"<<endl;
-trial.runMagmaFile("2");
-usleep(3 * microsecond);
-trial.readSignature();	
+while (1 == 1)
+{
+	trial.createPublicPrivateKey();
+	trial.runMagmaFile("1");
+	usleep(1 * microsecond);//sleeps for 3 seconds
+	trial.readPublicPrivateKey();
+
+	//cout<<"setting message"<<endl;
+
+	//cout<<"creating sign message program"<<endl;
+	trial.signMessage();
+	//cout<<"running sign message program"<<endl;
+	trial.runMagmaFile("2");
+	usleep(1 * microsecond);
+	//cout<<"reading message signature"<<endl;
+	trial.readSignature();	
+
+	//cout<<"creating verify signature program"<<endl;
+	trial.verifySignature();
+	usleep(1 * microsecond);
+	//cout<<"running verify message program"<<endl;
+	trial.runMagmaFile("3");
+	//cout<<"reading message verification"<<endl;
 	
-//trial.verifySignature();
-//usleep(3 * microsecond);
-//trial.runMagmaFile("3");
-//trial.readVerification
+	bool verificationControl = trial.readVerification();
+	if (verificationControl)
+	{
+		break;
+	}
+		
+}
+
 
 
 
