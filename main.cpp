@@ -100,6 +100,10 @@ while (1 == 1)
 	{
 		break;
 	}
+	if (!verificationControl)
+	{
+		trial.setOmega("");
+	}
 		
 }
 
