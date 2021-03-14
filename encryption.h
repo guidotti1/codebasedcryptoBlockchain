@@ -20,8 +20,7 @@ private:
 	publickey ourPublic;
 	privatekey ourPrivate;
 	//vector<string> allFileNames;
-	
-	string message;
+
 	//parameters used for the KKS signature algorithm
 	string q;
 	string N;
@@ -30,6 +29,10 @@ private:
 	string k;
 	string t1;
 	string t2;
+	//message is a binary string to be signed
+	//omega is the signature as signed by KKS algorithm
+	string message;
+	string omega;
 	
 
 public:
@@ -57,7 +60,7 @@ public:
 	//mutator functions
 	void setKeys(vector<vector<int> > G, vector<vector<int> > H, vector<vector<int> > F, vector<int> J);
 	void setMessage(string ourMessage);
-	
+	void setOmega(string ourOmega);
 
 	
 	
