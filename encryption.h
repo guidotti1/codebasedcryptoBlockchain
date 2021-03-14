@@ -55,7 +55,8 @@ public:
 	//read input from output of signature program
 	void readSignature();
 	//read input from output of verification program
-	void readVerification();
+	//return true if verification succeeds, false if fails
+	bool readVerification();
 
 	//mutator functions
 	void setKeys(vector<vector<int> > G, vector<vector<int> > H, vector<vector<int> > F, vector<int> J);
