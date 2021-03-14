@@ -165,27 +165,21 @@ void encryption::readPublicPrivateKey()
 	vector<int> temp;
 	for (int i = 0; i <  lines.size(); i++)
 	{
-		//cout<<"parsing the line " << lines[i]<<endl;
 		if (lines[i] == "delimiter")
 		{
-			//cout<<"reading next"<<endl;
 			count++;
-			//cout<<"count "<<count<<endl;
 			continue;
 		}
 		if (lines[i].substr(0, 5) == "Magma")
 		{
-			//cout<<"passing first line"<<endl;
 			continue;
 		}
 		if (lines[i] == "Type ? for help.  Type <Ctrl>-D to quit.")
 		{
-			//cout<<"passing second line"<<endl;
 			continue;
 		}
 		if (lines[i].substr(0,5) == "Total")
 		{
-			//cout<<"last line"<<endl;
 			continue;
 		}
 		else 
@@ -206,8 +200,6 @@ void encryption::readPublicPrivateKey()
 					}
 					else
 					{
-						//cout<<"the character "<<lines[i][j];
-						//cout<<" converts to the integer  "<<(int)lines[i][j]<<endl;
 						temp.push_back((int)lines[i][j] -  48);
 					}
 				}
@@ -326,8 +318,8 @@ void encryption::signMessage()
 			nextRow+= to_string(usedG[i][j]);
 			if (j < GNumColumns-1)
 			{
-				nextRow+= ',';
-				nextRow+= ' ';
+			nextRow+= ',';
+			nextRow+= ' ';
 			}
 		}
 		nextRow+= ']';
@@ -358,7 +350,7 @@ void encryption::signMessage()
 	output<<"omegaSpace:=VectorSpace(F, "+N+");"<<endl;
 	output<<"omega:=Random(omegaSpace);"<<endl;
 	output<<"jCounter := 1;"<<endl;
-	output<<"for i in [1..+"+N+"] do"<<endl;
+	output<<"for i in [1.."+N+"] do"<<endl;
 	output<<"    if (jCounter eq (#J+1)) then    "<<endl;
 	output<<"        break;   "<<endl;
 	output<<"    end if;"<<endl;
@@ -425,12 +417,18 @@ void encryption::readSignature()
 		}
 	}
 	
+	/*
 	cout << "let us run through setOmega"<<endl;
 	for (int i = 0; i < setOmega.size(); i++)
 	{
 		cout<<setOmega[i]<<" ";
 	}
 	cout<<endl;
+	*/
+	for (int i = 0; i < setOmega.size(); i++)
+	{
+		omega+=to_string(setOmega[i]);
+	}
 	
 }
 
@@ -459,17 +457,81 @@ void encryption::verifySignature()
 
 	vector<vector<int> > usedH = ourPublic.getH();
 	int HNumRows = usedH.size();
-	int HNumColumns = usedH[1].size();
+	int HNumColumns = usedH[0].size();
+	vector<vector<int> > usedF = ourPublic.getF();
+	int FNumRows = usedF.size();
+	int FNumColumns = usedF[0].size();
 	string filename = "verifyMessage.txt";
 	ofstream output;
 	output.open(filename.c_str());
 	output<<"q:="+q+";"<<endl;
 	output<<"F:=GF(q);"<<endl;
+	output<<"V := VectorSpace(F, "+to_string(HNumColumns)+");"<<endl;
 	output<<"H:=RandomMatrix(F, "+to_string(HNumRows)+", "+to_string(HNumColumns)+");"<<endl;
-	output<<"for i in [1.."+to_string(HNumRows)+"] do"<<endl;
-	output<<"	for j in [1.."+to_string(HNumColumns)+"] do "<<endl;
-	output<<"	end for;"<<endl;
-	output<<"end for;"<<endl;
+	string nextrow="";
+	for (int i = 0; i < HNumRows; i++)
+	{
+		nextrow += '[';
+		for (int j = 0; j < HNumColumns; j++)
+		{
+			nextrow += to_string(usedH[i][j]);
+			if (j < HNumColumns-1)
+			{
+				nextrow += ',';
+				nextrow+= ' ';
+			}
+		}
+		nextrow += ']';
+		output<<"H["+to_string(i+1)+"] := V!"+nextrow+";"<<endl;
+		nextrow="";
+	}
+	output<<"VF := VectorSpace(F, "+to_string(FNumColumns)+");"<<endl;
+	output<<"FMatrix:=RandomMatrix(F, "+to_string(FNumRows)+", "+to_string(FNumColumns)+");"<<endl;
+	nextrow="";
+	for (int i = 0; i < FNumRows; i++)
+	{
+		nextrow += '[';
+		for (int j = 0; j < FNumColumns; j++)
+		{
+			nextrow += to_string(usedF[i][j]);
+			if (j < FNumColumns-1)
+			{
+				nextrow += ',';
+				nextrow+= ' ';
+			}
+		}
+		nextrow += ']';
+		output<<"FMatrix["+to_string(i+1)+"] := VF!"+nextrow+";"<<endl;
+		nextrow="";
+	}
+	output<<"omegaSpace:=VectorSpace(F, "+N+");"<<endl;
+	string ourOmega = "";
+	ourOmega += "[";
+	for (int i = 0; i < omega.size(); i++)
+	{
+		ourOmega += omega[i];
+		if (i < omega.size()-1)
+		{
+			ourOmega += ",";
+			ourOmega += ' ';
+		}
+	}
+	ourOmega+= ']';
+	output<<"omega := omegaSpace!"+ourOmega+";"<<endl;
+	output<<"messageSpace:=VectorSpace(F, "+k+");"<<endl;
+	string ourMessage="";
+	ourMessage+= "[";
+	for (int i = 0; i < message.size(); i++)
+	{
+		ourMessage+= message[i];
+		if (i < message.size()-1)
+		{
+			ourMessage+= ',';
+			ourMessage+= ' ';
+		}
+	}
+	ourMessage+=']';
+	output<<"x := messageSpace!"+ourMessage+";"<<endl;
 	output<<"omegaMatrix:=RandomMatrix(F, 1, "+N+");"<<endl;
 	output<<"omegaMatrix[1]:=omega;"<<endl;
 	output<<"xMatrix:=RandomMatrix(F, 1, "+k+");"<<endl;
@@ -503,4 +565,49 @@ void encryption::verifySignature()
 
 }
 
+bool encryption::readVerification()
+{
+	string next;
+	vector<string> lines;
+	ifstream myfile ("verifyMessageOutput.txt");
+	if (myfile.is_open())
+	{
+		while (getline(myfile, next))
+		{
+			lines.push_back(next);
+		}
+		myfile.close();
+	}
+	else
+	{
+		cout<<"failed to open verifyMessageOutput.txt file"<<endl;
+	}
+	for (int i = 0; i <  lines.size(); i++)
+	{
+		if (lines[i].substr(0, 5) == "Magma")
+		{
+			continue;
+		}
+		if (lines[i] == "Type ? for help.  Type <Ctrl>-D to quit.")
+		{
+			continue;
+		}
+		if (lines[i].substr(0,5) == "Total")
+		{
+			continue;
+		}
+		if (lines[i] == "verification was succesful")
+		{
+			cout<<"Verification succeeds"<<endl;
+			return true;
+		}
+		if (lines[i] == "verification was a failure")
+		{
+			cout<<"Verification fails"<<endl;
+			return false;
+		}
+	}
+
+
+}
 
