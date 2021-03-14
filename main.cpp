@@ -10,10 +10,11 @@
 
 using namespace std;
 
+
+string convertHashToBinary(string hash);
+
 int main()
 {
-
-
 
 //the user is able to choose their own block difficulty and the number of blocks that the chain will have 
 int blockDifficulty=0;
@@ -148,3 +149,26 @@ else
 return 0;
 
 }
+
+string convertHashToBinary(string hash) 
+{ 
+	int n = hash.length(); 
+	for (int i = 0; i <= n; i++) 
+	string ans="";
+	{  
+	int val = int(s[i]); 
+
+	string bin = ""; 
+	while (val > 0) 
+	{ 
+	    (val % 2)? bin.push_back('1') : 
+		       bin.push_back('0'); 
+	    val /= 2; 
+	} 
+	reverse(bin.begin(), bin.end()); 
+
+	//cout << bin << " ";
+	ans += bin;
+	} 
+	return ans;
+} 
