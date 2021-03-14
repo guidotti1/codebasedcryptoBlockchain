@@ -7,6 +7,8 @@
 #include"encryption.h"
 #include<stdlib.h>
 #include<unistd.h>
+#include<string>
+#include<bits/stdc++.h> 
 
 using namespace std;
 
@@ -63,12 +65,17 @@ encryption trial(setq, setN, setK, setn, setk, sett1, sett2);
 trial.setMessage("1101100110110110111010001100110001001000110001100001000000111001110010011110111111110010100010011011000000100110010000110010100010011101000001110001000000111110");	
 unsigned int microsecond = 1000000;
 	
+string sampleHash = "e9e1a8ec0345e1407e39b07e9c7a81abe5c49b6aa246495fe2ffeb173c673840";
+cout << "this is our sample hash : " << sampleHash<<endl;
+cout << "let's convert this hash to binary"<<endl;
+cout<< convertHashToBinary(sampleHash)<<endl;
+	
 
 while (1 == 1)
 {
 	trial.createPublicPrivateKey();
 	trial.runMagmaFile("1");
-	usleep(1 * microsecond);//sleeps for 3 seconds
+	usleep(3 * microsecond);//sleeps for 3 seconds
 	trial.readPublicPrivateKey();
 
 	//cout<<"setting message"<<endl;
@@ -77,13 +84,13 @@ while (1 == 1)
 	trial.signMessage();
 	//cout<<"running sign message program"<<endl;
 	trial.runMagmaFile("2");
-	usleep(1 * microsecond);
+	usleep(3 * microsecond);
 	//cout<<"reading message signature"<<endl;
 	trial.readSignature();	
 
 	//cout<<"creating verify signature program"<<endl;
 	trial.verifySignature();
-	usleep(1 * microsecond);
+	usleep(3 * microsecond);
 	//cout<<"running verify message program"<<endl;
 	trial.runMagmaFile("3");
 	//cout<<"reading message verification"<<endl;
@@ -153,22 +160,22 @@ return 0;
 string convertHashToBinary(string hash) 
 { 
 	int n = hash.length(); 
-	for (int i = 0; i <= n; i++) 
 	string ans="";
+	for (int i = 0; i <= n; i++) 
 	{  
-	int val = int(s[i]); 
+		int val = int(hash[i]); 
 
-	string bin = ""; 
-	while (val > 0) 
-	{ 
-	    (val % 2)? bin.push_back('1') : 
-		       bin.push_back('0'); 
-	    val /= 2; 
-	} 
-	reverse(bin.begin(), bin.end()); 
+		string bin = ""; 
+		while (val > 0) 
+		{ 
+		    (val % 2)? bin.push_back('1') : 
+			       bin.push_back('0'); 
+		    val /= 2; 
+		} 
+		reverse(bin.begin(), bin.end()); 
 
-	//cout << bin << " ";
-	ans += bin;
+		//cout << bin << " ";
+		ans += bin;
 	} 
 	return ans;
 } 
