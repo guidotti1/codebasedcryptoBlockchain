@@ -326,8 +326,8 @@ void encryption::signMessage()
 			nextRow+= to_string(usedG[i][j]);
 			if (j < GNumColumns-1)
 			{
-			nextRow+= ',';
-			nextRow+= ' ';
+				nextRow+= ',';
+				nextRow+= ' ';
 			}
 		}
 		nextRow+= ']';
