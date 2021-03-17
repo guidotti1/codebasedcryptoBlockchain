@@ -65,10 +65,8 @@ encryption trial(setq, setN, setK, setn, setk, sett1, sett2);
 trial.setMessage("1101100110110110111010001100110001001000110001100001000000111001110010011110111111110010100010011011000000100110010000110010100010011101000001110001000000111110");	
 unsigned int microsecond = 1000000;
 	
-string sampleHash = "e9e1a8ec0345e1407e39b07e9c7a81abe5c49b6aa246495fe2ffeb173c673840";
-cout << "this is our sample hash : " << sampleHash<<endl;
-cout << "let's convert this hash to binary"<<endl;
-cout<< convertHashToBinary(sampleHash)<<endl;
+//string sampleHash = "e9e1a8ec0345e1407e39b07e9c7a81abe5c49b6aa246495fe2ffeb173c673840";
+//cout<< convertHashToBinary(sampleHash)<<endl;
 	
 
 while (1 == 1)
@@ -163,23 +161,11 @@ return 0;
 
 string convertHashToBinary(string hash) 
 { 
-	int n = hash.length(); 
 	string ans="";
-	for (int i = 0; i <= n; i++) 
-	{  
-		int val = int(hash[i]); 
-
-		string bin = ""; 
-		while (val > 0) 
-		{ 
-		    (val % 2)? bin.push_back('1') : 
-			       bin.push_back('0'); 
-		    val /= 2; 
-		} 
-		reverse(bin.begin(), bin.end()); 
-
-		//cout << bin << " ";
-		ans += bin;
-	} 
+	for (size_t i = 0; i < hash.size(); ++i)
+	{
+		bitset<8> b(hash.c_str()[i]);
+    		ans+= b.to_string();
+	}
 	return ans;
 } 
