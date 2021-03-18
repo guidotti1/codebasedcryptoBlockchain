@@ -169,7 +169,7 @@ void sternIdentification::createSternScheme()
     s<<"//r := Random(dimTenSpace);"<<endl;
     s<<"//r;"<<endl;
 
-    s<<"print \"delimiter\";"<<endl;
+    s<<"//print \"delimiter\";"<<endl;
 
     s<<"uMatrix := RandomMatrix(F, 1, N);"<<endl;
     s<<"uMatrix[1] := u;"<<endl;
@@ -261,7 +261,9 @@ void sternIdentification::readSternScheme()
                     }
                     else if (lines[i][j] == ')')
                     {
+                        nextCycle.push_back(nextCycleElement);
                         omega.push_back(nextCycle);
+                        nextCycleElement = "";
                         nextCycle.clear();
                     }
                     else
