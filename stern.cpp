@@ -5,10 +5,13 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string>
+#include<stdlib.h>
+#include<unistd.h>
+#include<bits/stdc++.h>
 using namespace std;
 
 
-class sternIdentification()
+class sternIdentification
 {
 private :
     //private key
@@ -16,8 +19,8 @@ private :
     //public key
     string y;
     //permutation
-    //each cycle of the permutation is stored as a string in the vector
-    vector<string> omega;
+    //each cycle of the permutation is stored as a vector of strings in the vector
+    vector<vector<string> > omega;
     //u is random vector over F_{2}^{N}
     string u;
     //direct sum u + s;
@@ -48,6 +51,14 @@ public :
 int main()
 {
     sternIdentification test("1024", "512", "110");
+    unsigned int microsecond = 1000000;
+
+
+    test.createSternScheme();
+    usleep(2 * microsecond);
+    test.runSternScheme();
+    usleep(2 * microsecond);
+    test.readSternScheme();
 
 
 
@@ -57,16 +68,26 @@ return 0;
 sternIdentification::sternIdentification()
 {
     s="";
-    y="":
-    vector<string> emptyVect;
+    y="";
+    vector<vector<string> > emptyVect;
     omega = emptyVect;
     u="";
     directSumUandS="";
     HuTranspose="";
+    N="";
+    K="";
+    T="";
 }
 
 sternIdentification::sternIdentification(string setN, string setK, string setT)
 {
+    s="";
+    y="";
+    vector<vector<string> > emptyVect;
+    omega = emptyVect;
+    u="";
+    directSumUandS="";
+    HuTranspose="";
     N= setN;
     K= setK;
     T= setT;
@@ -137,16 +158,16 @@ void sternIdentification::createSternScheme()
     s<<"//commitments"<<endl;
     s<<"u := Random(dimensionNSpace);"<<endl;
 
-    s<<"permGroup := SymmetricGroup(10);"<<endl;
+    s<<"permGroup := SymmetricGroup(N);"<<endl;
     s<<"omega:= Random(permGroup);"<<endl;
     s<<"//printing our permutation omega -- need to compute permutations of stuff"<<endl;
     s<<"//for both c2 and c3. also need permutation for c1"<<endl;
     s<<"omega;"<<endl;
     s<<"print \"delimiter\";"<<endl;
 
-    s<<"dimTenSpace := VectorSpace(F, 10);"<<endl;
-    s<<"r := Random(dimTenSpace);"<<endl;
-    s<<"    r;"<<endl;
+    s<<"//dimTenSpace := VectorSpace(F, 10);"<<endl;
+    s<<"//r := Random(dimTenSpace);"<<endl;
+    s<<"//r;"<<endl;
 
     s<<"print \"delimiter\";"<<endl;
 
@@ -226,6 +247,7 @@ void sternIdentification::readSternScheme()
         {
             for (int j = 0; j < lines[i].size(); j++)
             {
+                //count 0 : setting our permutation omega
                 if (count == 0)
                 {
                     if ((lines[i][j] == '(') || (lines[i][j] == ' '))
@@ -239,21 +261,84 @@ void sternIdentification::readSternScheme()
                     }
                     else if (lines[i][j] == ')')
                     {
+                        omega.push_back(nextCycle);
                         nextCycle.clear();
-                        nextCycleElement=="";
                     }
                     else
                     {
-
+                        nextCycleElement+=lines[i][j];
                     }
 
                 }
+                //count 1 : setting the row vector H*Transpose(u)
+                else if (count == 1)
+                {
+                    if ((lines[i][j] == '[') || (lines[i][j] == ' '))
+                    {
+                        continue;
+                    }
+                    else if (lines[i][j] == ']')
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        setHUTranspose += lines[i][j];
+                    }
+                }
+                //count 2 : setting the row vector u
+                else if (count == 2)
+                {
+                    if ((lines[i][j] == '(') || (lines[i][j] == ' '))
+                    {
+                        continue;
+                    }
+                    else if (lines[i][j] == ')')
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        setU += lines[i][j];
+                    }
+                }
+                //count 3 : setting the direct sum
+                else if (count == 3)
+                {
+                    if ((lines[i][j] == '(') || (lines[i][j] == ' '))
+                    {
+                        continue;
+                    }
+                    else if (lines[i][j] == ')')
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        setDirectSumUandS += lines[i][j];
+                    }
+                }
             }
-
-
         }
-
     }
+
+    cout<<" setDirectSumUandS : "<<endl;
+    cout << setDirectSumUandS << endl << endl << endl;
+    cout<<" setU : "<<endl;
+    cout << setU << endl << endl << endl;
+    cout<<" setHUTranspose : " << endl;
+    cout << setHUTranspose << endl << endl << endl;
+
+    cout<<"lastly lets go through omega"<<endl;
+    for (int i = 0; i < omega.size(); i++)
+    {
+        for (int j = 0; j < omega[i].size(); j++)
+        {
+            cout<<omega[i][j] << " ";
+        }
+    cout<<endl;
+    }
+    cout<<endl<<endl<<endl;
 
 
 }
