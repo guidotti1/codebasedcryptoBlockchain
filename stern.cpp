@@ -11,6 +11,9 @@
 using namespace std;
 
 
+//omega is the permutation we are using
+//change string is what we are applying omega to.
+void runPermutation(vector<vector<string> > omega, string &change);
 class sternIdentification
 {
 private :
@@ -60,9 +63,28 @@ int main()
     usleep(2 * microsecond);
     test.readSternScheme();
 
-
-
 return 0;
+}
+
+void runPermutation(vector<vector<string> > omega, string & change)
+{
+  vector<char> temp;
+  for (int i = 0; i < omega.size(); i++)
+  {
+    for (int j = 0; j < omega[i].size(); j++)
+    {
+      temp.push_back(change[stoi(omega[i][j])]);                       
+    }
+
+    change[stoi(omega[i][0])] = temp[temp.size()-1];
+
+    for (int j = 1; j < omega[i].size(); j++)
+    {
+      change[stoi(omega[i][j])] = temp[j-1]; 
+    }
+    temp.clear();
+  }
+  return;
 }
 
 sternIdentification::sternIdentification()
@@ -324,23 +346,21 @@ void sternIdentification::readSternScheme()
         }
     }
 
-    cout<<" setDirectSumUandS : "<<endl;
-    cout << setDirectSumUandS << endl << endl << endl;
-    cout<<" setU : "<<endl;
-    cout << setU << endl << endl << endl;
-    cout<<" setHUTranspose : " << endl;
-    cout << setHUTranspose << endl << endl << endl;
-
-    cout<<"lastly lets go through omega"<<endl;
+    //altering omega to agree with cpp indices
+    int indexIJint;
     for (int i = 0; i < omega.size(); i++)
     {
-        for (int j = 0; j < omega[i].size(); j++)
-        {
-            cout<<omega[i][j] << " ";
-        }
-    cout<<endl;
+	for (int j = 0; j < omega[i].size(); j++)
+	{
+	   indexIJint = stoi(omega[i][j]);
+	   indexIJint--;
+	   omega[i][j] = to_string(indexIJint);
+	}
     }
-    cout<<endl<<endl<<endl;
+    
+    HuTranspose = setHUTranspose;
+    directSumUandS = setDirectSumUandS;
+    u = setU;
 
 
 }
