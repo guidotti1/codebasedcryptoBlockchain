@@ -88,7 +88,7 @@ int main()
      }
      */
      int b = test.generateResponse();
-     b=0;
+     //b=0;
      string sendU; 
      string sendDirectSum;
      vector<vector<string >> sendOmega; 
