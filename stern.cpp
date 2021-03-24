@@ -7,13 +7,15 @@
 #include<string>
 #include<stdlib.h>
 #include<unistd.h>
+#include<time.h>
 #include<bits/stdc++.h>
+#include"sha256.h"
 using namespace std;
 
 
 //omega is the permutation we are using
-//change string is what we are applying omega to.
-void runPermutation(vector<vector<string> > omega, string &change);
+//change string is what we are applying permutation to.
+void runPermutation(vector<vector<string> > perm, string &change);
 class sternIdentification
 {
 private :
@@ -47,6 +49,21 @@ public :
     void runSternScheme();
     //read output from stern scheme
     void readSternScheme();
+    //calculate c1, c2, c3 according to provision for stern scheme
+    //returns vector of strings having these three and sends that to receiver 
+    vector<string> calculateCs();
+    //generate response (b = 0, 1, 2)
+    //based on these, prover sends certain information to receiver
+    int generateResponse();
+    //accessor functions
+    string getU(); 
+    string getHuTranspose();
+    string getDirectSumUandS();
+    string getS();
+    vector<vector<string> > getOmega();	
+    
+     
+
 
 
 };
@@ -62,25 +79,100 @@ int main()
     test.runSternScheme();
     usleep(2 * microsecond);
     test.readSternScheme();
+	
+     vector<string> cVector = test.calculateCs();
+     /*
+     for (int i = 0; i < cVector.size(); i++)
+     {
+	  cout<<" i : " << i + 1  << "c_{i} "<<  cVector[i]<<endl;
+     }
+     */
+     int b = test.generateResponse();
+     b=0;
+     string sendU; 
+     string sendDirectSum;
+     vector<vector<string >> sendOmega; 
+     string sendS;
+     //based on response (random in {0, 1, 2})
+     //P sends information to V
+     if (b == 0)
+     {
+	     sendU = test.getU();
+	     sendOmega = test.getOmega();
+     }
+     if (b==1)
+     {
+	     sendDirectSum = test.getDirectSumUandS();
+	     sendOmega = test.getOmega();
+     }
+     if (b==2)
+     {
+	     sendU = test.getU();
+	     sendS = test.getS();
+     }
+	
+     bool endRes;	
+     //now, based on b V will finally verify the calculations
+     if (b == 0)
+     {
+	     string combinedOmega="";
+	     for (int i = 0; i < sendOmega.size(); i++)
+	     {
+		     for (int j = 0; j < sendOmega[i].size(); j++)
+		     {
+			     combinedOmega += sendOmega[i][j];
+		     }
+	     }
+	     string checkc1 = sha256(combinedOmega + sendU);
+	     if (checkc1 == cVector[0])
+	     {
+		     endRes = true;
+	     }
+	     else
+	     {
+		     endRes = false;
+	     }
+	     
+	     string tempU = sendU;
+	     runPermutation(sendOmega, tempU);
+	     string checkc2 = sha256(tempU);
+	     if (checkc2 == cVector[1])
+	     {
+		     endRes = true;
+	     }
+	     else
+	     {
+		     endRes =  false;
+	     }
+     }
+	
+	if (endRes)
+	{
+	cout<<"lets go "<<endl;
+	}
+     //if (b==1)
+     //{
+	     
+
 
 return 0;
 }
 
-void runPermutation(vector<vector<string> > omega, string & change)
+void runPermutation(vector<vector<string> > perm, string & change)
 {
   vector<char> temp;
-  for (int i = 0; i < omega.size(); i++)
+  for (int i = 0; i < perm.size(); i++)
   {
-    for (int j = 0; j < omega[i].size(); j++)
+    for (int j = 0; j < perm[i].size(); j++)
     {
-      temp.push_back(change[stoi(omega[i][j])]);                       
+      temp.push_back(change[stoi(perm[i][j])]);                       
     }
 
-    change[stoi(omega[i][0])] = temp[temp.size()-1];
+    change[stoi(perm[i][0])] = temp[temp.size()-1];
 
-    for (int j = 1; j < omega[i].size(); j++)
+    for (int j = 1; j < perm[i].size(); j++)
     {
-      change[stoi(omega[i][j])] = temp[j-1]; 
+      change[stoi(perm[i][j])] = temp[j-1]; 
     }
     temp.clear();
   }
@@ -363,5 +455,58 @@ void sternIdentification::readSternScheme()
     u = setU;
 
 
+}
+	     
+vector<string> sternIdentification::calculateCs()
+{
+   string combineOmega="";
+   for (int i = 0; i < omega.size(); i++)
+   {
+	   for (int j = 0; j < omega[i].size(); j++)
+	   {
+		   combineOmega+=omega[i][j];
+	   }
+   }
+   string c1 = sha256(combineOmega + HuTranspose);
+   string tempU = u;
+   runPermutation(omega, tempU);
+   string c2 = sha256(tempU);
+   string tempDirectSum = directSumUandS;
+   string c3 = sha256(tempDirectSum);
+   vector<string> ans;
+   ans.push_back(c1);
+   ans.push_back(c2);
+   ans.push_back(c3);
+   return ans;
+}
+
+int sternIdentification::generateResponse()
+{
+    return rand() & 3;
+}
+		     
+string sternIdentification::getU()
+{
+    return u;
+}
+
+string sternIdentification::getS()
+{
+    return s;
+}	
+		     
+string sternIdentification::getHuTranspose()
+{
+    return HuTranspose;
+}
+		     
+string sternIdentification::getDirectSumUandS()
+{
+    return directSumUandS;
+}
+
+vector<vector<string> > sternIdentification::getOmega()
+{
+    return omega;
 }
 
