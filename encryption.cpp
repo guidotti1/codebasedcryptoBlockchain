@@ -546,13 +546,10 @@ void encryption::verifySignature()
 	output<<"    //print \"one fails\";"<<endl;
 	output<<"end if;"<<endl;
 	output<<"verifiedTwo:=true;"<<endl;
-	output<<"if (Weight(omega) lt 520) then"<<endl;
-	output<<"    if (Weight(omega) gt 480) then"<<endl;
-	output<<"        verifiedTwo:=true;    "<<endl;
-	output<<"    else"<<endl;
-	output<<"        verifiedTwo:=false;"<<endl;
-	output<<"        //print\"two fails\";"<<endl;
-	output<<"    end if;"<<endl;
+	output<<"if (Weight(omega) lt "+t2+") and (Weight(omega) gt "+t1+")) then"<<endl;
+	output<<"    verifiedTwo:=true;"<<endl;
+	output<<"else "<<endl;
+	output<<"    verifiedTwo:=false;"<<endl;
 	output<<"end if;"<<endl;
 	output<<"if ((verifiedOne eq true) and (verifiedTwo eq true)) then"<<endl;
 	output<<"    print \"verification was succesful\";"<<endl;
