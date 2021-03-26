@@ -90,11 +90,13 @@ int main()
      int b = test.generateResponse();
      //b=0;
      string sendU; 
+     string sendHUTranspose;
      string sendDirectSum;
      vector<vector<string >> sendOmega; 
      string sendS;
      //based on response (random in {0, 1, 2})
      //P sends information to V
+     b=1;
      if (b == 0)
      {
 	     sendU = test.getU();
@@ -113,6 +115,8 @@ int main()
 	
      bool endRes;	
      //now, based on b V will finally verify the calculations
+     //b == 0, check c1 and c2
+      
      if (b == 0)
      {
 	     string combinedOmega="";
@@ -137,6 +141,39 @@ int main()
 	     runPermutation(sendOmega, tempU);
 	     string checkc2 = sha256(tempU);
 	     if (checkc2 == cVector[1])
+	     {
+		     endRes = true;
+	     }
+	     else
+	     {
+		     endRes =  false;
+	     }
+     }
+     //b == 1, check c1 and c3	
+     if (b == 1)
+     {
+	     string combinedOmega="";
+	     for (int i = 0; i < sendOmega.size(); i++)
+	     {
+		     for (int j = 0; j < sendOmega[i].size(); j++)
+		     {
+			     combinedOmega += sendOmega[i][j];
+		     }
+	     }
+	     string checkc1 = sha256(combinedOmega + sendU);
+	     if (checkc1 == cVector[0])
+	     {
+		     endRes = true;
+	     }
+	     else
+	     {
+		     endRes = false;
+	     }
+	     
+	     string tempDirectSum = sendDirectSum;
+             runPermutation(sendOmega, tempDirectSum);
+	     string checkc3 = sha256(tempDirectSum);
+	     if (checkc3 == cVector[2])
 	     {
 		     endRes = true;
 	     }
