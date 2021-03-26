@@ -350,8 +350,11 @@ void encryption::signMessage()
 	output<<"omegaSpace:=VectorSpace(F, "+N+");"<<endl;
 	output<<"omega:=Random(omegaSpace);"<<endl;
 	output<<"jCounter := 1;"<<endl;
-	output<<"for i in [1.."+N+"] do"<<endl;
+	output<<"N := "+N+";"<<endl;
+	output<<"rest := N+1;"<<endl;
+	output<<"for i in [1..N] do"<<endl;
 	output<<"    if (jCounter eq (#J+1)) then    "<<endl;
+	output<<"	 res := i;"<<endl;
 	output<<"        break;   "<<endl;
 	output<<"    end if;"<<endl;
 	output<<"    if (J[jCounter] eq i) then"<<endl;
@@ -361,6 +364,9 @@ void encryption::signMessage()
 	output<<"        omega[i]:=F!0;"<<endl;
 	output<<"    end if;"<<endl;
 	output<<"end for; "<<endl;
+	output<<"for i in [rest..N] do"<<endl;
+	output<<"    omega[i] := F!0;"<<endl;
+	output<<"end for;"<<endl;
 	output<<"omega;"<<endl;
 	output.close();
 
@@ -546,7 +552,7 @@ void encryption::verifySignature()
 	output<<"    //print \"one fails\";"<<endl;
 	output<<"end if;"<<endl;
 	output<<"verifiedTwo:=true;"<<endl;
-	output<<"if (Weight(omega) lt "+t2+") and (Weight(omega) gt "+t1+")) then"<<endl;
+	output<<"if ((Weight(omega) lt "+t2+") and (Weight(omega) gt "+t1+")) then"<<endl;
 	output<<"    verifiedTwo:=true;"<<endl;
 	output<<"else "<<endl;
 	output<<"    verifiedTwo:=false;"<<endl;
@@ -556,7 +562,6 @@ void encryption::verifySignature()
 	 output<<"   //counter:=counter+1;"<<endl;
 	output<<"else"<<endl;
 	output<<"    print \"verification was a failure\";"<<endl;
-
 	output<<"end if;"<<endl;
 	output.close();
 
