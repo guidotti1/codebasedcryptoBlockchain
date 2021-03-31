@@ -22,6 +22,10 @@ string binaryMatrixMultiplication(vector<vector<int> > matrix, vector<vector<int
 vector<vector<int> > generateTranspose(string message);
 //subtract two binary vectors
 string binarySubtraction(string v1, string v2);
+//find weight (number nonzero positions) for a word
+int findWeight(string v);
+
+
 class sternIdentification
 {
 private :
@@ -69,6 +73,7 @@ public :
     string getDirectSumUandS();
     string getS();
     string getY();
+    string getT();
     vector<vector<int> > getH();
     vector<vector<string> > getOmega();	
     
@@ -81,8 +86,8 @@ public :
 int main()
 {
     sternIdentification test("1024", "512", "110");
+    //sternIdentification test("6", "2", "2");
     unsigned int microsecond = 1000000;
-
 
     test.createSternScheme();
     usleep(2 * microsecond);
@@ -91,51 +96,52 @@ int main()
     test.readSternScheme();
 	
      vector<string> cVector = test.calculateCs();
-     /*
-     for (int i = 0; i < cVector.size(); i++)
-     {
-	  cout<<" i : " << i + 1  << "c_{i} "<<  cVector[i]<<endl;
-     }
-     */
      int b = test.generateResponse();
-     //b=0;
+
      string sendU; 
      string calculateHUTranspose;
+     string calculateHTimesDirectSum;
      string sendDirectSum;
      vector<vector<string >> sendOmega; 
-     string sendS;
+     string sendY;
      vector<vector<int >> sendH;
+     vector<vector<int> >  sendDirectSumTranspose;
+     vector<vector<int> > uTranspose;
+     string omegaOfU;
+     string omegaOfS;
+     string sendS;
      //based on response (random in {0, 1, 2})
      //P sends information to V
-     b=0;
      if (b == 0)
      {
 	     sendU = test.getU();
-	     //sendHuTranspose = test.getHuTranspose();
 	     sendOmega = test.getOmega();
 	     sendH = test.getH();
-	     vector<vector<int> > uTranspose = generateTranspose(sendU);
+	     uTranspose = generateTranspose(sendU);
 	     calculateHUTranspose = binaryMatrixMultiplication(sendH, uTranspose);
      }
      if (b==1)
      {
-	     sendDirectSum = test.getDirectSumUandS();
-	     //sendHuTranspose = test.getHuTranspose();
-	     sendOmega = test.getOmega();
-	     sendH = test.getH();
-	     vector<vector<int> > directSumTranspose = generateTranspose(sendDirectSum);
-	     calculateHTimesDirectSum = binaryMatrixMultiplication(sendH, directSumTranspose);
+	    sendH = test.getH();
+	    sendDirectSum = test.getDirectSumUandS();
+	    sendOmega = test.getOmega();
+	    sendDirectSumTranspose = generateTranspose(sendDirectSum);
+	    calculateHTimesDirectSum = binaryMatrixMultiplication(sendH, sendDirectSumTranspose);
+	    sendY = test.getY();
+	    calculateHUTranspose = binarySubtraction(calculateHTimesDirectSum, sendY);
+	    
      }
      if (b==2)
      {
+	     sendOmega = test.getOmega();
 	     sendU = test.getU();
 	     sendS = test.getS();
+	
      }
 	
      bool endRes;	
      //now, based on b V will finally verify the calculations
      //b == 0, check c1 and c2
-      
      if (b == 0)
      {
 	     string combinedOmega="";
@@ -149,6 +155,7 @@ int main()
 	     string checkc1 = sha256(combinedOmega + calculateHUTranspose);
 	     if (checkc1 == cVector[0])
 	     {
+
 		     endRes = true;
 	     }
 	     else
@@ -169,10 +176,9 @@ int main()
 	     }
      }
      //b == 1, check c1 and c3	
-	/*
      if (b == 1)
      {
-	     string combinedOmega="";
+	    string combinedOmega="";
 	     for (int i = 0; i < sendOmega.size(); i++)
 	     {
 		     for (int j = 0; j < sendOmega[i].size(); j++)
@@ -180,7 +186,7 @@ int main()
 			     combinedOmega += sendOmega[i][j];
 		     }
 	     }
-	     string checkc1 = sha256(combinedOmega + sendHuTranspose);
+	     string checkc1 = sha256(combinedOmega + calculateHUTranspose);
 	     if (checkc1 == cVector[0])
 	     {
 		     endRes = true;
@@ -189,9 +195,8 @@ int main()
 	     {
 		     endRes = false;
 	     }
-	     
 	     string tempDirectSum = sendDirectSum;
-             runPermutation(sendOmega, tempDirectSum);
+	     runPermutation(sendOmega, tempDirectSum);
 	     string checkc3 = sha256(tempDirectSum);
 	     if (checkc3 == cVector[2])
 	     {
@@ -202,17 +207,45 @@ int main()
 		     endRes =  false;
 	     }
      }
-     */
-	
-	if (endRes)
-	{
-	cout<<"lets go "<<endl;
-	}
-     //if (b==1)
-     //{
-	     
-
-
+     //b == 2, check c2 and c3	
+     if (b == 2)
+     {
+	     string tempU = sendU;
+	     runPermutation(sendOmega, tempU);
+	     string checkc2 = sha256(tempU);
+	     string tempS = sendS;
+	     runPermutation(sendOmega, tempS);
+	     if (checkc2 == cVector[1])
+	     {
+		     endRes = true;
+	     }
+	     else
+	     {
+		     endRes = false;
+	     }
+	     string calculateOmegaOfDirectSum = binarySubtraction(tempU, tempS);
+	     string checkc3 = sha256(calculateOmegaOfDirectSum);
+	     if (checkc3 == cVector[2])
+	     {
+		     endRes = true;
+	     }
+	     else 
+	     {
+		     endRes = false;
+	     }
+	     int weightCheck = findWeight(tempS);
+	     string t = test.getT();
+	     int tInt = stoi(t);
+	     if (weightCheck == tInt)
+	     {
+		     endRes = true;
+	     }
+	     else
+	     {
+		     endRes = false;
+	     }
+     }
+     
 return 0;
 }
 
@@ -322,7 +355,7 @@ void sternIdentification::createSternScheme()
     s<<"sMatrix := RandomMatrix(F, 1, N);"<<endl;
     s<<"sMatrix[1] := s;"<<endl;
 
-    s<<"//publick key is y in F_{2}^N-K such that Hs^{T} = y"<<endl;
+    s<<"//public key is y in F_{2}^N-K such that Hs^{T} = y"<<endl;
     s<<"y:= H*Transpose(sMatrix);"<<endl;
     s<<"//y is column vector so I am just storing as a row in publicKey"<<endl;
     s<<"publicKey:=Transpose(y);"<<endl;
@@ -362,6 +395,10 @@ void sternIdentification::createSternScheme()
     s<<"directSum;"<<endl;
     s<<"print \"delimiter\";"<<endl;
     s<<"H;"<<endl;
+    s<<"print \"delimiter\";"<<endl;	
+    s<<"publicKey;"<<endl;	
+    s<<"print \"delimiter\";"<<endl;	
+    s<<"privateKey;"<<endl;
     s.close();
 
 }
@@ -502,6 +539,30 @@ void sternIdentification::readSternScheme()
 	             	 nextHRow.push_back((int)lines[i][j] - 48);
 		     }
 		}
+		//count 5 : setting the public key y
+		else if (count == 5)
+		{
+		     if((lines[i][j] == '[') || (lines[i][j] == ' ') || (lines[i][j] == ']'))
+		     {
+			 continue;
+		     }
+		     else
+		     {
+			 y += lines[i][j];
+		     }
+		}
+		//count 6 : setting private key s 
+		else if (count == 6)
+		{
+		     if((lines[i][j] == '(') || (lines[i][j] == ' ') || (lines[i][j] == ')'))
+		     {
+			 continue;
+		     }
+		     else
+		     {
+			 s += lines[i][j];
+		     }
+		}
             }
         }
     }
@@ -521,6 +582,7 @@ void sternIdentification::readSternScheme()
     HuTranspose = setHUTranspose;
     directSumUandS = setDirectSumUandS;
     u = setU;
+    H = setH;
 
 
 }
@@ -540,6 +602,7 @@ vector<string> sternIdentification::calculateCs()
    runPermutation(omega, tempU);
    string c2 = sha256(tempU);
    string tempDirectSum = directSumUandS;
+   runPermutation(omega, tempDirectSum);
    string c3 = sha256(tempDirectSum);
    vector<string> ans;
    ans.push_back(c1);
@@ -588,6 +651,11 @@ vector<vector<int> > sternIdentification::getH()
     return H;
 }
 
+string sternIdentification::getT()
+{
+     return T;
+}
+
 string binaryMatrixMultiplication(vector<vector<int> > matrix, vector<vector<int> > messageTranspose)
 {
 	string res = "";
@@ -596,10 +664,13 @@ string binaryMatrixMultiplication(vector<vector<int> > matrix, vector<vector<int
 	{
 	  for (int j = 0; j < messageTranspose.size(); j++)
 	  {
+            //cout << "mult " << matrix[i][j] << " with " << messageTranspose[j][0]<<endl;
 	    temp += matrix[i][j] * messageTranspose[j][0];
 	  }
+	  //cout<<endl;
 	  temp = temp % 2;
 	  res+= to_string(temp);
+	  temp = 0;
 	}
 
 	return res;
@@ -625,10 +696,22 @@ string binarySubtraction(string v1, string v2)
 	string res;
 	for (int i = 0; i < v1.size(); i++)
 	{
-    string t1(1, v1[i]);
-    string t2(1, v2[i]);
-		res += to_string((stoi(t1) + stoi(t2))%2);
+	    string t1(1, v1[i]);
+	    string t2(1, v2[i]);
+	    res += to_string((stoi(t1) + stoi(t2))%2);
 	}
 	return res;
 }
 		
+int findWeight(string v)
+{	
+	int res  =0; 
+	for (int i =0; i < v.size(); i++)
+	{
+		if (v[i] != '0')
+		{
+			res++;
+		}
+	}
+	return res;
+}
