@@ -16,6 +16,12 @@ using namespace std;
 //omega is the permutation we are using
 //change string is what we are applying permutation to.
 void runPermutation(vector<vector<string> > perm, string &change);
+//multiply a binary matrix with a column vector
+string binaryMatrixMultiplication(vector<vector<int> > matrix, vector<vector<int> > messageTranspose);
+//generate the transpose of a one row vector
+vector<vector<int> > generateTranspose(string message);
+//subtract two binary vectors
+string binarySubtraction(string v1, string v2);
 class sternIdentification
 {
 private :
@@ -23,6 +29,8 @@ private :
     string s;
     //public key
     string y;
+    //H is a (n-k) * n binary matrix common to all users
+    vector<vector<int> > H;
     //permutation
     //each cycle of the permutation is stored as a vector of strings in the vector
     vector<vector<string> > omega;
@@ -60,6 +68,8 @@ public :
     string getHuTranspose();
     string getDirectSumUandS();
     string getS();
+    string getY();
+    vector<vector<int> > getH();
     vector<vector<string> > getOmega();	
     
      
@@ -90,22 +100,31 @@ int main()
      int b = test.generateResponse();
      //b=0;
      string sendU; 
-     string sendHUTranspose;
+     string calculateHUTranspose;
      string sendDirectSum;
      vector<vector<string >> sendOmega; 
      string sendS;
+     vector<vector<int >> sendH;
      //based on response (random in {0, 1, 2})
      //P sends information to V
-     b=1;
+     b=0;
      if (b == 0)
      {
 	     sendU = test.getU();
+	     //sendHuTranspose = test.getHuTranspose();
 	     sendOmega = test.getOmega();
+	     sendH = test.getH();
+	     vector<vector<int> > uTranspose = generateTranspose(sendU);
+	     calculateHUTranspose = binaryMatrixMultiplication(sendH, uTranspose);
      }
      if (b==1)
      {
 	     sendDirectSum = test.getDirectSumUandS();
+	     //sendHuTranspose = test.getHuTranspose();
 	     sendOmega = test.getOmega();
+	     sendH = test.getH();
+	     vector<vector<int> > directSumTranspose = generateTranspose(sendDirectSum);
+	     calculateHTimesDirectSum = binaryMatrixMultiplication(sendH, directSumTranspose);
      }
      if (b==2)
      {
@@ -127,7 +146,7 @@ int main()
 			     combinedOmega += sendOmega[i][j];
 		     }
 	     }
-	     string checkc1 = sha256(combinedOmega + sendU);
+	     string checkc1 = sha256(combinedOmega + calculateHUTranspose);
 	     if (checkc1 == cVector[0])
 	     {
 		     endRes = true;
@@ -150,6 +169,7 @@ int main()
 	     }
      }
      //b == 1, check c1 and c3	
+	/*
      if (b == 1)
      {
 	     string combinedOmega="";
@@ -160,7 +180,7 @@ int main()
 			     combinedOmega += sendOmega[i][j];
 		     }
 	     }
-	     string checkc1 = sha256(combinedOmega + sendU);
+	     string checkc1 = sha256(combinedOmega + sendHuTranspose);
 	     if (checkc1 == cVector[0])
 	     {
 		     endRes = true;
@@ -182,6 +202,7 @@ int main()
 		     endRes =  false;
 	     }
      }
+     */
 	
 	if (endRes)
 	{
@@ -339,6 +360,8 @@ void sternIdentification::createSternScheme()
         s<<"directSum[i] := F!res;"<<endl;
     s<<"end for;"<<endl;
     s<<"directSum;"<<endl;
+    s<<"print \"delimiter\";"<<endl;
+    s<<"H;"<<endl;
     s.close();
 
 }
@@ -374,7 +397,9 @@ void sternIdentification::readSternScheme()
     string setDirectSumUandS;
     int count = 0;
     vector<string> nextCycle;
+    vector<vector<int> > setH;
     string nextCycleElement;
+    vector<int> nextHRow;
     for (int i = 0; i < lines.size(); i++)
     {
         if (lines[i] == "delimiter")
@@ -382,18 +407,18 @@ void sternIdentification::readSternScheme()
             count++;
             continue;
         }
-        if (lines[i].substr(0, 5) == "Magma")
-		{
-			continue;
-		}
-		if (lines[i] == "Type ? for help.  Type <Ctrl>-D to quit.")
-		{
-			continue;
-		}
-		if (lines[i].substr(0,5) == "Total")
-		{
-			continue;
-		}
+        else if (lines[i].substr(0, 5) == "Magma")
+	{
+		continue;
+	}
+	else if (lines[i] == "Type ? for help.  Type <Ctrl>-D to quit.")
+	{
+		continue;
+	}
+	else if (lines[i].substr(0,5) == "Total")
+	{
+		continue;
+	}
         else
         {
             for (int j = 0; j < lines[i].size(); j++)
@@ -426,11 +451,7 @@ void sternIdentification::readSternScheme()
                 //count 1 : setting the row vector H*Transpose(u)
                 else if (count == 1)
                 {
-                    if ((lines[i][j] == '[') || (lines[i][j] == ' '))
-                    {
-                        continue;
-                    }
-                    else if (lines[i][j] == ']')
+                    if ((lines[i][j] == '[') || (lines[i][j] == ' ') || (lines[i][j] == ']'))
                     {
                         continue;
                     }
@@ -442,11 +463,7 @@ void sternIdentification::readSternScheme()
                 //count 2 : setting the row vector u
                 else if (count == 2)
                 {
-                    if ((lines[i][j] == '(') || (lines[i][j] == ' '))
-                    {
-                        continue;
-                    }
-                    else if (lines[i][j] == ')')
+                    if ((lines[i][j] == '(') || (lines[i][j] == ' ') || (lines[i][j] == ')'))
                     {
                         continue;
                     }
@@ -458,11 +475,7 @@ void sternIdentification::readSternScheme()
                 //count 3 : setting the direct sum
                 else if (count == 3)
                 {
-                    if ((lines[i][j] == '(') || (lines[i][j] == ' '))
-                    {
-                        continue;
-                    }
-                    else if (lines[i][j] == ')')
+                    if ((lines[i][j] == '(') || (lines[i][j] == ' ') || (lines[i][j] == ')'))
                     {
                         continue;
                     }
@@ -471,6 +484,24 @@ void sternIdentification::readSternScheme()
                         setDirectSumUandS += lines[i][j];
                     }
                 }
+		 //count 4 : setting the H matrix
+		else if (count == 4)
+		{
+		
+		     if ((lines[i][j] == '[') || (lines[i][j] == ' '))
+		     {
+			 continue;
+		     }
+		     else if (lines[i][j] == ']')
+		     {
+			 setH.push_back(nextHRow);
+			 nextHRow.clear();
+		     }
+		     else
+		     {
+	             	 nextHRow.push_back((int)lines[i][j] - 48);
+		     }
+		}
             }
         }
     }
@@ -531,6 +562,11 @@ string sternIdentification::getS()
 {
     return s;
 }	
+
+string sternIdentification::getY()
+{
+    return y;
+}
 		     
 string sternIdentification::getHuTranspose()
 {
@@ -546,4 +582,53 @@ vector<vector<string> > sternIdentification::getOmega()
 {
     return omega;
 }
+	
+vector<vector<int> > sternIdentification::getH()
+{ 
+    return H;
+}
 
+string binaryMatrixMultiplication(vector<vector<int> > matrix, vector<vector<int> > messageTranspose)
+{
+	string res = "";
+	int temp = 0;
+	for (int i = 0; i < matrix.size(); i ++)
+	{
+	  for (int j = 0; j < messageTranspose.size(); j++)
+	  {
+	    temp += matrix[i][j] * messageTranspose[j][0];
+	  }
+	  temp = temp % 2;
+	  res+= to_string(temp);
+	}
+
+	return res;
+}
+
+vector<vector<int> > generateTranspose(string message)
+{
+	vector<vector<int> > res;
+	vector<int> next;
+	string temp;
+	for (int i = 0 ; i < message.size(); i++)
+	{
+		temp = message[i];
+		next.push_back(stoi(temp));
+		res.push_back(next);
+		next.clear();
+	}
+	return res;
+}
+
+string binarySubtraction(string v1, string v2)
+{
+	string res;
+	for (int i = 0; i < v1.size(); i++)
+	{
+    string t1(1, v1[i]);
+    string t2(1, v2[i]);
+		res += to_string((stoi(t1) + stoi(t2))%2);
+	}
+	return res;
+}
+		
