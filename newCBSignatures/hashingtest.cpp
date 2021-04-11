@@ -76,7 +76,7 @@ for (int i = 0; i < res.size(); i++)
 cout << "gfqRes(y): " << gfqRes<<endl;
 
 
-cout<<"putting that shit in the proper magma format"<<endl;
+cout<<"putting that in the proper magma format"<<endl;
 //putting c(resulting hash) in magma format
 getcTomagma(to_string(b), to_string(q), gfqRes);
 
