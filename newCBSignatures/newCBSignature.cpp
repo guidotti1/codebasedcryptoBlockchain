@@ -74,7 +74,7 @@ vector<vector<int> > eTranspose = initializeETranspose(n, b, q, rowsOfE);
 vector<vector<int> > eMatrix = generateTranspose(eTranspose);
 if (checkSupportSizes(eMatrix, wsubE, tsubE))
 {
-    cout<<"generated E matrix passes the support size criterion"<<endl;
+    //cout<<"generated E matrix passes the support size criterion"<<endl;
 }
 
 vector<vector<int> > sMatrix = matrixMultiplication(q, eMatrix, generateTranspose(hMatrix));
@@ -86,15 +86,15 @@ vector<vector<int> > sMatrix = matrixMultiplication(q, eMatrix, generateTranspos
 int tempq = 2*gamma + 1;
 vector<int> tempy = generateRandomVector(tempq, n);
 
-cout<<"generating y"<<endl;
+//cout<<"generating y"<<endl;
 vector<int> y = generateY(n, q, tempq, tempy, gamma);
 
-cout<<"y becomes "<<endl;
-for (int i =0; i <y.size(); i++)
-{
-    cout<<y[i] << " ";
-}
-cout <<endl;
+//cout<<"y becomes "<<endl;
+//for (int i =0; i <y.size(); i++)
+//{
+    //cout<<y[i] << " ";
+//}
+//cout <<endl;
 
 vector<vector<int> > yMatrix;
 yMatrix.push_back(y);
@@ -103,31 +103,31 @@ vector<vector<int> >  ssuby = matrixMultiplication(q, yMatrix, generateTranspose
 
 	
 string ssubystring="";
-cout<<"ssuby becomes"<<endl;
+//cout<<"ssuby becomes"<<endl;
 for (int i =0; i  < ssuby.size(); i++)
 {
 	for (int j=0; j < ssuby[i].size(); j++)
 	{
 		ssubystring+=to_string(ssuby[i][j]);
-		cout<<ssuby[i][j]<<" ";
+		//cout<<ssuby[i][j]<<" ";
 	}
-	cout<<endl;
+	//cout<<endl;
 }
-cout<<endl;
+//cout<<endl;
 
-cout<<"generating a random message (20 random numbers)"<<endl;
+//cout<<"generating a random message (20 random numbers)"<<endl;
 string message="";
 for (int i=0; i<20; i++)
 {
 	message+=to_string(rand() % 10);
 }
 
-cout<<"performing the desired hashing"<<endl;
+//cout<<"performing the desired hashing"<<endl;
 hashingtest ourhash(q, n, b, wsubC, message, ssubystring);
 string gf3Hash = ourhash.getHashGF3();
 string gfqHash = ourhash.getHashGFq(gf3Hash);
-cout<<"hash in gfq meeting desired weight requirement"<<endl;
-cout<<gfqHash<<endl;
+//cout<<"hash in gfq meeting desired weight requirement"<<endl;
+//cout<<gfqHash<<endl;
 
 vector<int> c;
 string nextchar;
@@ -158,8 +158,27 @@ vector<vector<int> > cMatrixTimesSMatrix = matrixMultiplication(q, cMatrix, sMat
 
 vector<vector<int> > ssubyCheck =  matrixSubtraction(q, zTimesHtranspose, cMatrixTimesSMatrix);
 
-cout<<"s sub y check"<<endl;
+//cout<<"s sub y check"<<endl;
 outputMatrix(ssubyCheck);
+
+bool ssubyEqual=true;
+for (int i=0; i<ssubyCheck[0].size(); i++)
+{
+	if (ssubyCheck[0][i] != ssuby[0][i])
+	{
+		ssubyEqual=false;
+		break;
+	}
+}
+
+if(ssubyEqual)
+{
+	cout<<"ssuby final is equal to original"<<endl;
+}
+else
+{
+	cout<<"oops"<<endl;
+}
 
 
 return 0;
