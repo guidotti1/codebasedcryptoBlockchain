@@ -1,319 +1,41 @@
-#include<iostream>
-#include <vector>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string>
-#include <time.h>
-#include <algorithm>
-#include "hashingtest.h"
-using namespace std;
+#include "newCBSignature.h"
 
-//output a matirx
-void outputMatrix(vector<vector<int> > matrix);
-//generate a random matrix over a finite field
-vector<vector<int> > generateRandomMatrix(int fieldSize, int numRows, int numCols);
-//generate identity matrix of size k x k
-vector<vector<int> > generateIdentityMatrix(int k);
-//return the horizontal join of two matrices
-vector<vector<int> > horizontalJoinMatrices(vector<vector<int> > leftMatrix, vector<vector<int> > rightMatrix);
-//return the transpose of a matrix
-vector<vector<int> > generateTranspose(vector<vector<int> > matrix);
-//check support size of a matrix so that each column has support size w_e and each row has support size >= t_e
-bool checkSupportSizes(vector<vector<int> > matrix, int wsubE, int tsubE);
-//calculate weight (number nonzero positions) for a given vector
-int calculateWeight(vector<int> check);
-//get a 2D vector of zero indices (used in generating random E matrix that meets our desired criterion)
-vector<vector<int> > zeroIndices(int n, int b, int wsubE);
-//generate rows of E matrix, based on our zero indices 2-D vector
-vector<vector<int> > generateETransposeRows(vector<vector<int> > zeroIndices, int b, int wsubE);
-//based on the rows of E, initialize E Transpose
-vector<vector<int> > initializeETranspose(int n, int b, int q, vector<vector<int> > rowsOfETranspose);
-//generate a random vector of length n over finite field of order q
-vector<int> generateRandomVector(int q, int n);
-//generate a vector of length n y, uniformly from the elements {0, +-1, ..., +- gamma} in F_q
-vector<int> generateY(int n, int q, int tempq, vector<int> tempy, int gamma);
-//matrix multiplication over finite field of order q
-vector<vector<int> > matrixMultiplication(int q, vector<vector<int> > leftmatrix, vector<vector<int> > rightmatrix);
-//perform matrix addition over a finite field of order  q
-vector<vector<int> > matrixAddition(int q, vector<vector<int> > leftmatrix, vector<vector<int> > rightmatrix);
-//perform matrix subtraction over a finite field of order q
-vector<vector<int> > matrixSubtraction(int q, vector<vector<int> > leftmatrix, vector<vector<int> > rightmatrix);
-
-int main()
+newCBSignature::newCBSignature()
 {
-srand(time(NULL));
-int q = 7;
-int n= 400;
-
-//r, b, t_e all chosen to be less than n
-int r = 100;
-int b = 218;
-int tsubE = 156;
-
-//w_e, w_c chosen to be <= b
-int wsubE = 141;
-int wsubC = 151;
-
-//gamma bar and gamma chosen to be gammabar<gamma<q/2
-int gammaBar = 1;
-int gamma = 2;
-
-int k = n-r;
-
-//KEY GENERATION
-vector<vector<int> > pMatrix = generateRandomMatrix(q, r, k);
-vector<vector<int> > iMatrix = generateIdentityMatrix(r);
-vector<vector<int> > hMatrix = horizontalJoinMatrices(iMatrix, pMatrix);
-
-
-vector<vector<int> > usedZeroIndices = zeroIndices(n, b, wsubE);
-vector<vector<int> > rowsOfE = generateETransposeRows(usedZeroIndices, b, wsubE);
-
-
-vector<vector<int> > eTranspose = initializeETranspose(n, b, q, rowsOfE);
-vector<vector<int> > eMatrix = generateTranspose(eTranspose);
-if (checkSupportSizes(eMatrix, wsubE, tsubE))
-{
-    //cout<<"generated E matrix passes the support size criterion"<<endl;
+	n=0;
+	q=0;
+	r=0;
+	b=0;
+	tsubE=0;
+	wsubE=0;
+	wsubC=0;
+	gammaBar=0;
+	k=n-r;
+	vector<vector<int> > empty;
+	cMatrix=empty;
+	zMatrix=empty;
+	message="";
 }
 
-vector<vector<int> > sMatrix = matrixMultiplication(q, eMatrix, generateTranspose(hMatrix));
-
-//private key is E Matrix
-//public key is [H matrix, S matrix]
-
-//SIGNATURE GENERATION
-int tempq = 2*gamma + 1;
-vector<int> tempy = generateRandomVector(tempq, n);
-
-//cout<<"generating y"<<endl;
-vector<int> y = generateY(n, q, tempq, tempy, gamma);
-
-//cout<<"y becomes "<<endl;
-//for (int i =0; i <y.size(); i++)
-//{
-    //cout<<y[i] << " ";
-//}
-//cout <<endl;
-
-vector<vector<int> > yMatrix;
-yMatrix.push_back(y);
-
-vector<vector<int> >  ssuby = matrixMultiplication(q, yMatrix, generateTranspose(hMatrix));
-
-	
-string ssubystring="";
-//cout<<"ssuby becomes"<<endl;
-for (int i =0; i  < ssuby.size(); i++)
-{
-	for (int j=0; j < ssuby[i].size(); j++)
-	{
-		ssubystring+=to_string(ssuby[i][j]);
-		//cout<<ssuby[i][j]<<" ";
-	}
-	//cout<<endl;
-}
-//cout<<endl;
-
-//cout<<"generating a random message (20 random numbers)"<<endl;
-string message="";
-for (int i=0; i<20; i++)
-{
-	message+=to_string(rand() % 10);
+newCBSignature::newCBSignature(int setq, int setn, int setr, int setb, int settsubE, int setwsubE, int setwsubC, int setgammaBar, int setgamma)
+{	
+	q=setq;
+	n=setn;
+	r=setr;
+	b=setb;
+	tsubE=settsubE;
+	wsubE=setwsubE;
+	wsubC=setwsubC;
+	gammaBar=setgammaBar;
+	gamma=setgamma;
+	k=n-r;
+	vector<vector<int> > empty;
+	cMatrix=empty;
+	zMatrix=empty;
+	message="";
 }
 
-//cout<<"performing the desired hashing"<<endl;
-hashingtest ourhash(q, n, b, wsubC, message, ssubystring);
-string gf3Hash = ourhash.getHashGF3();
-string gfqHash = ourhash.getHashGFq(gf3Hash);
-//cout<<"hash in gfq meeting desired weight requirement"<<endl;
-//cout<<gfqHash<<endl;
-
-vector<int> c;
-string nextchar;
-for (int i=0; i<gfqHash.length(); i++)
-{
-	nextchar=gfqHash[i];
-	c.push_back(stoi(nextchar));
-	nextchar="";
-}
-
-vector<vector<int> > cMatrix;
-cMatrix.push_back(c);
-
-
-vector<vector<int> > cTimesE = matrixMultiplication(q, cMatrix, eMatrix);
-vector<vector<int> > zMatrix = matrixAddition(q, cTimesE, yMatrix);
-
-
-
-
-
-//signature part 1 is z
-//signature part 2 is c
-
-//SIGNATURE VERIFICATION
-vector<vector<int> > zTimesHtranspose =  matrixMultiplication(q, zMatrix, generateTranspose(hMatrix));
-vector<vector<int> > cMatrixTimesSMatrix = matrixMultiplication(q, cMatrix, sMatrix);
-
-vector<vector<int> > ssubyCheck =  matrixSubtraction(q, zTimesHtranspose, cMatrixTimesSMatrix);
-
-//cout<<"s sub y check"<<endl;
-outputMatrix(ssubyCheck);
-
-bool ssubyEqual=true;
-for (int i=0; i<ssubyCheck[0].size(); i++)
-{
-	if (ssubyCheck[0][i] != ssuby[0][i])
-	{
-		ssubyEqual=false;
-		break;
-	}
-}
-
-if(ssubyEqual)
-{
-	cout<<"ssuby final is equal to original"<<endl;
-}
-else
-{
-	cout<<"oops"<<endl;
-}
-
-
-return 0;
-}
-
-void outputMatrix(vector<vector<int> > matrix)
-{
-    for (int i = 0; i < matrix.size(); i++)
-        {
-        for (int j = 0; j < matrix[i].size(); j++)
-            {
-                cout<<matrix[i][j]<<" ";
-            }
-        cout<<endl;
-        }
-    return;
-}
-
-
-vector<vector<int> > generateRandomMatrix(int fieldSize, int numRows, int numCols)
-{
-    vector<vector<int> > res;
-    vector<int> nextRow;
-    for (int i = 0; i < numRows; i++)
-        {
-            nextRow.clear();
-            for (int j = 0; j <numCols; j++)
-                {
-                    nextRow.push_back(rand() % fieldSize);
-                }
-            res.push_back(nextRow);
-        }
-    return res;
-}
-
-vector<vector<int> > generateIdentityMatrix(int k)
-{
-    vector<vector<int> > res;
-        for (int i = 0; i < k; i++)
-        {
-            vector<int> nextRow(k, 0);
-            nextRow[i] = 1;
-            res.push_back(nextRow);
-        }
-    return res;
-}
-
-vector<vector<int> > horizontalJoinMatrices(vector<vector<int> > leftMatrix, vector<vector<int> > rightMatrix)
-{
-    vector<vector<int> > res;
-    vector<int> nextrow;
-    for (int i = 0; i < leftMatrix.size(); i++)
-        {
-        nextrow.clear();
-        for (int j = 0; j < leftMatrix[i].size(); j++)
-            {
-                nextrow.push_back(leftMatrix[i][j]);
-            }
-        for (int j = 0; j < rightMatrix[i].size(); j++)
-            {
-                nextrow.push_back(rightMatrix[i][j]);
-            }
-        res.push_back(nextrow);
-        }
-    return res;
-}
-
-vector<vector<int> > generateTranspose(vector<vector<int> > matrix)
-{
-    vector<vector<int> > res;
-    vector<int> nextrow;
-    for (int i = 0; i < matrix[0].size(); i++)
-        {
-            nextrow.clear();
-            for (int j = 0; j < matrix.size(); j++)
-                {
-                nextrow.push_back(matrix[j][i]);
-                }
-            res.push_back(nextrow);
-        }
-    return res;
-}
-
-bool checkSupportSizes(vector<vector<int> > matrix, int wsubE, int tsubE)
-{
-    vector<vector<int> > matrixTranspose = generateTranspose(matrix);
-    int weightCheck;
-    bool resOne = true;
-    for (int i = 0; i < matrixTranspose.size(); i++)
-        {
-            weightCheck = calculateWeight(matrixTranspose[i]);
-            if (weightCheck != wsubE)
-                {
-                //BAD
-                resOne = false;
-                break;
-                }
-            else
-                {
-                resOne = true;
-                }
-        }
-    bool resTwo = true;
-    for (int i = 0; i < matrix.size(); i++)
-        {
-            weightCheck = calculateWeight(matrix[i]);
-            if (weightCheck < tsubE)
-                {
-                //BAD
-                resTwo = false;
-                break;
-                }
-            else
-                {
-                resTwo = true;
-                }
-        }
-    return ((resOne)&&(resTwo));
-}
-
-
-int calculateWeight(vector<int> check)
-{
-    int res = 0;
-    for (int i =0; i <check.size(); i++)
-        {
-            if (check[i] != 0)
-                {
-                res ++;
-                }
-        }
-    return res;
-}
-
-vector<vector<int> > zeroIndices(int n, int b, int wsubE)
+vector<vector<int> > newCBSignature::zeroIndices()
 {
     vector<vector<int> >  res;
     vector<int> next;
@@ -347,7 +69,7 @@ vector<vector<int> > zeroIndices(int n, int b, int wsubE)
 }
 
 
-vector<vector<int> > generateETransposeRows(vector<vector<int> > zeroIndices, int b, int wsubE)
+vector<vector<int> > newCBSignature::generateETransposeRows(vector<vector<int> > zeroIndices)
 {
     vector<vector<int> > res;
     vector<int> nextRow;
@@ -387,7 +109,7 @@ vector<vector<int> > generateETransposeRows(vector<vector<int> > zeroIndices, in
     return res;
 }
 
-vector<vector<int> > initializeETranspose(int n, int b, int q, vector<vector<int> > rowsOfETranspose)
+vector<vector<int> > newCBSignature::initializeETranspose(vector<vector<int> > rowsOfETranspose)
 {
     vector<vector<int> > res;
     vector<int> nextrow;
@@ -416,17 +138,7 @@ vector<vector<int> > initializeETranspose(int n, int b, int q, vector<vector<int
     return res;
 }
 
-vector<int> generateRandomVector(int q, int n)
-{
-    vector<int> res;
-    for (int i = 0; i < n; i++)
-    {
-        res.push_back(rand() % q);
-    }
-    return res;
-}
-
-vector<int> generateY(int n, int q, int tempq, vector<int> tempy, int gamma)
+vector<int> newCBSignature::generateY(int tempq, vector<int> tempy)
 {
     vector<int> res;
     for (int i =0 ; i <n; i++)
@@ -446,66 +158,164 @@ vector<int> generateY(int n, int q, int tempq, vector<int> tempy, int gamma)
     return res;
 }
 
-vector<vector<int> > matrixMultiplication(int q, vector<vector<int> > leftmatrix, vector<vector<int> > rightmatrix)
+bool newCBSignature::checkZ()
 {
-	vector<vector<int> > res;
-	vector<int> nextrow;
-	int temp = 0;
-	for (int i = 0; i < leftmatrix.size(); i ++)
+	bool res=true;
+	bool indicator;
+	vector<int> usedZ = zMatrix[0];
+	for (int i=0; i<usedZ.size(); i++)
 	{
-	  for (int j = 0; j < rightmatrix[0].size(); j++)
-	  {
-        for (int k = 0; k <rightmatrix.size(); k++)
-        {
-            temp += (leftmatrix[i][k] * rightmatrix[k][j]) % q;
-        }
-        temp = temp % q;
-        nextrow.push_back(temp);
-        temp = 0;
-	  }
-	  res.push_back(nextrow);
-	  nextrow.clear();
-	}
-	return res;
-}
-
-vector<vector<int> > matrixAddition(int q, vector<vector<int> > leftmatrix, vector<vector<int> > rightmatrix)
-{
-	vector<vector<int> >res;
-	vector<int> nextrow;
-	int temp;
-	for (int i=0; i<leftmatrix.size(); i++)
-	{
-		for (int j=0; j<leftmatrix[i].size(); j++)
+		indicator=false;
+		for (int j=0; j<=gammaBar; j++)
 		{
-			temp=(leftmatrix[i][j]+rightmatrix[i][j])%q;
-			nextrow.push_back(temp);
-		}
-		res.push_back(nextrow);
-		nextrow.clear();
-	}
-	return res;
-}
-
-
-vector<vector<int> > matrixSubtraction(int q, vector<vector<int> > leftmatrix, vector<vector<int> > rightmatrix)
-{
-	vector<vector<int> >res;
-	vector<int> nextrow;
-	int temp;
-	for (int i=0; i<leftmatrix.size(); i++)
-	{
-		for (int j=0; j<leftmatrix[i].size(); j++)
-		{
-			temp=(leftmatrix[i][j]-rightmatrix[i][j])%q;
-			if (temp<0)
+			if (usedZ[i]==j)
 			{
-				temp+=q;
+				indicator=true;
+				continue;
 			}
-			nextrow.push_back(temp);
+			else if(usedZ[i] == q-j)
+			{
+				indicator=true;
+				continue;
+			}
+			else if ((usedZ[i]!=j) && (usedZ[i]!=q-j))
+			{
+		
+			}
 		}
-		res.push_back(nextrow);
-		nextrow.clear();
+		if (!indicator)
+		{
+			res=false;
+			return res;
+		}
 	}
 	return res;
+}
+
+void newCBSignature::setPublicPrivateKey(vector<vector<int> >  setE, vector<vector<int> > setH, vector<vector<int> >  setS)
+{
+	ourPrivate.setEMatrix(setE);
+	ourPublic.setHMatrix(setH);
+	ourPublic.setSMatrix(setS);
+}
+
+void newCBSignature::generatePublicPrivateKey()
+{
+	bool control=true;
+	vector<vector<int> > pMatrix;
+	vector<vector<int> > iMatrix;
+	vector<vector<int> > hMatrix;
+	
+	vector<vector<int> > usedZeroIndices;
+	vector<vector<int> > rowsOfE;
+	
+	vector<vector<int> > eTranspose;
+	vector<vector<int> > eMatrix;
+	
+	while (control)
+	{
+		pMatrix = operations.generateRandomMatrix(q, r, k);
+		iMatrix = operations.generateIdentityMatrix(r);
+		hMatrix = operations.horizontalJoinMatrices(iMatrix, pMatrix);
+
+		usedZeroIndices = zeroIndices();
+		rowsOfE = generateETransposeRows(usedZeroIndices);
+
+		eTranspose = initializeETranspose(rowsOfE);
+		eMatrix = operations.generateTranspose(eTranspose);
+		if (operations.checkSupportSizes(eMatrix, wsubE, tsubE))
+		{
+    		//cout<<"generated E matrix passes the support size criterion"<<endl;
+    		break;
+		}
+		else
+		{
+			cout<<"fails support size criterion"<<endl;
+		}
+
+	}
+	vector<vector<int> > hTranspose =  operations.generateTranspose(hMatrix);
+	vector<vector<int> > sMatrix = operations.matrixMultiplication(q, eMatrix, hTranspose);
+	setPublicPrivateKey(eMatrix, hMatrix, sMatrix);
+	
+}
+
+void newCBSignature::generateSignature()
+{
+	while (true)
+	{
+		int tempq = 2*gamma + 1;
+		vector<int> tempy = operations.generateRandomVector(tempq, n);
+		vector<int> y = generateY(tempq, tempy);
+		vector<vector<int> > yMatrix;
+		yMatrix.push_back(y);
+
+		vector<vector<int> > hMatrix = ourPublic.getHMatrix();
+		vector<vector<int> > hTranspose = operations.generateTranspose(hMatrix);
+		ssuby = operations.matrixMultiplication(q, yMatrix, hTranspose);
+		string ssubystring="";
+		//cout<<"ssuby becomes"<<endl;
+		for (int i =0; i  < ssuby.size(); i++)
+		{
+			for (int j=0; j < ssuby[i].size(); j++)
+			{
+				ssubystring+=to_string(ssuby[i][j]);
+			}
+		}
+
+		hashingtest ourhash(q, n, b, wsubC, message, ssubystring);
+		string gf3Hash = ourhash.getHashGF3();
+		vector<int> gfqHash = ourhash.getHashGFq(gf3Hash);
+		vector<int> c=gfqHash;
+
+		cMatrix.push_back(c);
+		vector<vector<int> > eMatrix = ourPrivate.getEMatrix();
+		vector<vector<int> > cTimesE = operations.matrixMultiplication(q, cMatrix, eMatrix);
+		zMatrix = operations.matrixAddition(q, cTimesE, yMatrix);
+	
+		if (checkZ())
+		{
+			//cout<<"Z passes"<<endl;
+			break;
+		}
+		else
+		{
+			cout<<"Z fails"<<endl;
+		}
+	}
+}
+
+void newCBSignature::verifySignature()
+{
+	bool check1 = checkZ();
+	vector<vector<int> > hMatrix = ourPublic.getHMatrix();
+	vector<vector<int> > hTranspose = operations.generateTranspose(hMatrix);
+	vector<vector<int> > zTimesHtranspose =  operations.matrixMultiplication(q, zMatrix, hTranspose);
+	vector<vector<int> > sMatrix = ourPublic.getSMatrix();
+	vector<vector<int> > cMatrixTimesSMatrix = operations.matrixMultiplication(q, cMatrix, sMatrix);
+
+	vector<vector<int> > ssubyCheck =  operations.matrixSubtraction(q, zTimesHtranspose, cMatrixTimesSMatrix);
+	string ssubystring="";
+	for (int i=0; i<ssuby.size(); i++)
+	{
+		for  (int j=0; j<ssuby[i].size(); j++)
+		{
+			ssubystring+=to_string(ssubyCheck[i][j]);
+		}
+	}
+	hashingtest ourhash(q, n, b, wsubC, message, ssubystring);
+	string gf3Hash = ourhash.getHashGF3();
+	vector<int> gfqHash = ourhash.getHashGFq(gf3Hash);
+	vector<int> c=gfqHash;
+	
+	bool check2 = (c==cMatrix[0]);
+	if (check2 && check1)
+	{
+		cout<<"lets go"<<endl;
+	}
+}
+
+void newCBSignature::setMessage(string setto)
+{
+	message=setto;
 }
