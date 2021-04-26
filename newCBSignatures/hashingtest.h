@@ -7,6 +7,7 @@
 //#include<bits/stdc++.h>
 #include<stdlib.h>
 #include<chrono>
+#include <vector>
 #include<unistd.h>
 using namespace std;
 
@@ -28,12 +29,10 @@ public:
 	void convertHashToTernary(string hash, string & res);
 	//calculate weight (support size, number of nonzero positions) of a ternary string
 	int calculateWeight(string ternaryString);
-
-	void getcTomagma(string gfqRes);
 	//based on message and ssuby, get a hash from sha-256 hashing whose weight is equal to wsubc
 	string getHashGF3();
 	//based on the hash from GF(3), convert to GFq
-	string getHashGFq(string res);
+	vector<int> getHashGFq(string res);
 	
 	
 private :
