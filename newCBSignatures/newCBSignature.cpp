@@ -283,6 +283,7 @@ void newCBSignature::generateSignature()
 			cout<<"Z fails"<<endl;
 		}
 	}
+	setOurSig();
 }
 
 void newCBSignature::verifySignature()
@@ -338,4 +339,10 @@ void newCBSignature::setPublicKey(newCBPublic setto)
 void newCBSignature::setPrivateKey(newCBPrivate setto)
 {
 	ourPrivate = setto;
+}
+
+void newCBSignature::setOurSig()
+{
+	CBSignature2 tempsig(zMatrix, cMatrix);
+	oursig = tempsig;
 }
