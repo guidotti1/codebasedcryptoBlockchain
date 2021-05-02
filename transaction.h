@@ -29,6 +29,8 @@ private:
 	int amount;
 	//stores hash information of all of the above stuff
 	string hash;
+	//stores the signature (for the new CB Signature algorithm) that this transaction has
+	CBSignature2 usedsig;
 	
 	
 public:
@@ -49,9 +51,9 @@ public:
 	//sign a transaction using method 1 - KKS signature algorithm
 	void signTransaction1();
 	//sign a transaction using method 2 - new CB signature algorithm
-	CBSignature2 signTransaction2(newCBPublic usedPublic, newCBPrivate usedPrivate);
+	void signTransaction2(newCBPublic usedPublic, newCBPrivate usedPrivate);
 	//verify the signature for the transaction using method 2 - new CB signature algorithm
-	bool isTransactionValid2(CBSignature2 usedsig);
+	bool isTransactionValid2();
 	
 	
 
