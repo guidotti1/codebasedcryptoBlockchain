@@ -58,15 +58,15 @@ mychain.addTransaction(firstTransaction);
 mychain.addTransaction(secondTransaction);
 
 cout<<"starting mining"<<endl;
-mychain.minePendingTransactions("myaddress");
+mychain.minePendingTransactions(myPublic);
 
 cout<<"My balance"<<endl;
-cout<<mychain.getBalanceOfAddress("myaddress")<<endl;
+cout<<mychain.getBalanceOfAddress(myPublic)<<endl;
 
 
-mychain.minePendingTransactions("myaddress");
+mychain.minePendingTransactions(myPublic);
 cout<<"Checking again"<<endl;
-cout<<mychain.getBalanceOfAddress("myaddress")<<endl;
+cout<<mychain.getBalanceOfAddress(myPublic)<<endl;
 
 	
 
