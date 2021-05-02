@@ -125,20 +125,20 @@ int blockchain::getSize()
 	return blockchainSize;
 }
 
-int blockchain::getBalanceOfAddress(string address)
+int blockchain::getBalanceOfAddress(newCBPublic address)
 {
 	int result=0;
 	vector<transaction> currTransactions;
-	string fromAddress;
-	string toAddress;
+	newCBPublic fromAddress;
+	newCBPublic toAddress;
 	int amount;
 	for (int i = 0; i < chain.size(); i++)
 		{
 			currTransactions=chain[i].getTransactions();
 			for (int j = 0; j < currTransactions.size(); j++)
 			{
-				fromAddress=currTransactions[j].getFrom();	
-				toAddress=currTransactions[j].getTo();
+				fromAddress=currTransactions[j].getfromkey();	
+				toAddress=currTransactions[j].gettokey();
 				amount=currTransactions[j].getAmount();
 				if (fromAddress==address)
 				{
