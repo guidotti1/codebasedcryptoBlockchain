@@ -85,6 +85,11 @@ newCBPublic transaction::getfromkey()
 	return fromkey;
 }
 
+newCBPublic transaction::gettokey()
+{
+	return tokey;
+}
+
 void transaction::setFrom(string s)
 {
 	from=s;
@@ -100,9 +105,14 @@ void transaction::setAmount(int a)
 	amount=a;
 }
 
-void transaction::setfromkey(newCBPublic setto)
+void transaction::setfromkey(newCBPublic setfrom)
 {
-	fromkey = setto;
+	fromkey = setfrom;
+}
+
+void transaction::settokey(newCBPublic setto)
+{
+	tokey = setto;
 }
 
 void transaction::calculateHash()
