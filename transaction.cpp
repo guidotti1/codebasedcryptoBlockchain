@@ -82,7 +82,7 @@ void transaction::signTransaction1()
 	calculateHash();
 }
 
-CBSignature2 transaction::signTransaction2(newCBPublic usedPublic, newCBPrivate usedPrivate)
+void transaction::signTransaction2(newCBPublic usedPublic, newCBPrivate usedPrivate)
 {
 	vector<vector<int> > usedh = usedPublic.getHMatrix();
 	vector<vector<int> > useds = usedPublic.getSMatrix();
@@ -120,10 +120,10 @@ CBSignature2 transaction::signTransaction2(newCBPublic usedPublic, newCBPrivate 
 	cout <<"generating signature for that message"<<endl;
 	temp.generateSignature();
 	
-	return temp.getOurSig();
+	usedsig =  temp.getOurSig();
 }
 
-bool transaction::isTransactionValid2(CBSignature2 usedsig)
+bool transaction::isTransactionValid2()
 {
 	if (from == "")
 	{
