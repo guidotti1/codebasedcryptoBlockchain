@@ -50,7 +50,9 @@ public:
 	void setPrivateKey(newCBPrivate setto);
 	//stores z matrix and c matrix as members of oursig object
 	void setOurSig();
-	
+	//mutator functions for the components of the public key - z matrix an c matrix
+	void setZ(vector<vector<int> > setto);
+	void setC(vector<vector<int> > setto);
 private:
 
 	int q; 
