@@ -6,6 +6,7 @@
 #include "newCBPrivate.h"
 #include "newCBPublic.h"
 #include "matrixOperations.h"
+#include "CBSignature2.h"
 using namespace std;
 
 
@@ -45,7 +46,8 @@ public:
 	//mutator functions to change the public and private keys of the algorithm
 	void setPublicKey(newCBPublic setto);
 	void setPrivateKey(newCBPrivate setto);
-
+	//stores z matrix and c matrix as members of oursig object
+	void setOurSig();
 private:
 
 	int q; 
@@ -75,6 +77,8 @@ private:
 	string message;
 	//s_y used in signature generation and verification step
 	vector<vector<int> > ssuby;
+	//stores the actual signature - Z and C
+	CBSignature2 oursig
 
 };
 
