@@ -47,6 +47,10 @@ block blockchain::getLastBlock()
 
 bool blockchain::isValid()
 {
+	if (chain[blockchainSize-1].verifyTransactions() == false)
+	{
+		return false;
+	}
 	for (int i = 1; i < chain.size(); i++)
 	{
 		block curr = chain[i];
@@ -64,19 +68,15 @@ bool blockchain::isValid()
 	return true;
 }
 
-
 vector<block> blockchain::getChain()
 {
 	return chain;
 }
 
-
 void blockchain::setChain(vector<block> setTo)
 {
 	chain=setTo;
 }
-
-
 
 void blockchain::minePendingTransactions(string rewardAddress)
 {
@@ -89,13 +89,28 @@ void blockchain::minePendingTransactions(string rewardAddress)
 	
 	pending.clear();
 	//giving a reward to the block that succesfully mined the transactions
-	transaction newTransaction("", rewardAddress, miningReward);
+	transaction newTransaction("NULL", rewardAddress, miningReward);
 	pending.push_back(newTransaction);
 }
 
-
 void blockchain::addTransaction(transaction newTransaction)
 {
+	if (newTransaction.getFrom() == "")
+	{
+		cout<<"trying to add a transaction with an empty from address which is not allowed"<<endl;
+		return;
+	}
+	if (newTransaction.getTo() == "")
+	{
+		cout<<"trying to add a transaction with an empty to address which is not allowed"<<endl;
+		return;
+	}
+	if (newTransaction.isTransactionValid2() == false)
+	{
+		cout<<"new transaction is not valid"<<endl;
+		return;
+	}
+		
 	pending.push_back(newTransaction);
 }
 
@@ -111,31 +126,30 @@ int blockchain::getSize()
 
 int blockchain::getBalanceOfAddress(string address)
 {
-int result=0;
-vector<transaction> currTransactions;
-string fromAddress;
-string toAddress;
-int amount;
-for (int i = 0; i < chain.size(); i++)
-	{
-		currTransactions=chain[i].getTransactions();
-		for (int j = 0; j < currTransactions.size(); j++)
+	int result=0;
+	vector<transaction> currTransactions;
+	string fromAddress;
+	string toAddress;
+	int amount;
+	for (int i = 0; i < chain.size(); i++)
 		{
-			fromAddress=currTransactions[j].getFrom();	
-			toAddress=currTransactions[j].getTo();
-			amount=currTransactions[j].getAmount();
-			if (fromAddress==address)
+			currTransactions=chain[i].getTransactions();
+			for (int j = 0; j < currTransactions.size(); j++)
 			{
-				result-=amount;
+				fromAddress=currTransactions[j].getFrom();	
+				toAddress=currTransactions[j].getTo();
+				amount=currTransactions[j].getAmount();
+				if (fromAddress==address)
+				{
+					result-=amount;
+				}
+				if (toAddress==address)
+				{
+					result+=amount;
+				}
 			}
-			if (toAddress==address)
-			{
-				result+=amount;
-			}
+			currTransactions.clear();
 		}
-		currTransactions.clear();
-	}
-return result;
-
+	return result;
 }
 
