@@ -43,11 +43,14 @@ public:
 	//functions to access the public and private keys of the algorithm
 	newCBPublic getPublicKey();
 	newCBPrivate getPrivateKey();
+	//function for accessing the signature
+	CBSignature2 getOurSig();
 	//mutator functions to change the public and private keys of the algorithm
 	void setPublicKey(newCBPublic setto);
 	void setPrivateKey(newCBPrivate setto);
 	//stores z matrix and c matrix as members of oursig object
 	void setOurSig();
+	
 private:
 
 	int q; 
@@ -78,7 +81,7 @@ private:
 	//s_y used in signature generation and verification step
 	vector<vector<int> > ssuby;
 	//stores the actual signature - Z and C
-	CBSignature2 oursig
+	CBSignature2 oursig;
 
 };
 
