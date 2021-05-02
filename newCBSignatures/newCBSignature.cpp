@@ -286,7 +286,7 @@ void newCBSignature::generateSignature()
 	setOurSig();
 }
 
-void newCBSignature::verifySignature()
+string newCBSignature::verifySignature()
 {
 	bool check1 = checkZ();
 	vector<vector<int> > hMatrix = ourPublic.getHMatrix();
@@ -312,7 +312,11 @@ void newCBSignature::verifySignature()
 	bool check2 = (c==cMatrix[0]);
 	if (check2 && check1)
 	{
-		cout<<"lets go"<<endl;
+		return "passes";
+	}
+	else 
+	{
+		return "fails";
 	}
 }
 
