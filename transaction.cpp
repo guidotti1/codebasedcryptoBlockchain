@@ -125,7 +125,7 @@ void transaction::signTransaction2(newCBPublic usedPublic, newCBPrivate usedPriv
 
 bool transaction::isTransactionValid2()
 {
-	if (from == "")
+	if (from == "NULL")
 	{
 		return true;
 	}
