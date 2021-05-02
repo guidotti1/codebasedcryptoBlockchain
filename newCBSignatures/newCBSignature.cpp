@@ -329,3 +329,13 @@ newCBPrivate newCBSignature::getPrivateKey()
 {
 	return ourPrivate;
 }
+
+void newCBSignature::setPublicKey(newCBPublic setto)
+{
+	ourPublic = setto;
+}
+
+void newCBSignature::setPrivateKey(newCBPrivate setto)
+{
+	ourPrivate = setto;
+}
