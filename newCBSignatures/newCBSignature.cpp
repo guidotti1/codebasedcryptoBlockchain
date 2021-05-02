@@ -319,3 +319,13 @@ void newCBSignature::setMessage(string setto)
 {
 	message=setto;
 }
+
+newCBPublic newCBSignature::getPublicKey()
+{
+	return ourPublic;
+}
+
+newCBPrivate newCBSignature::getPrivateKey()
+{
+	return ourPrivate;
+}
