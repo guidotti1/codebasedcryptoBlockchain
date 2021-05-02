@@ -25,6 +25,9 @@ private:
 	newCBPublic fromkey;
 	//stores fromkey as a string by converting matrices to string
 	string from;
+	//stores the to key itself
+	newCBPublic tokey;
+	//stores tokey as a string by converting matrices to string
 	string to;
 	int amount;
 	//stores hash information of all of the above stuff
@@ -36,6 +39,7 @@ private:
 public:
 	//0 & 3 arg constructors
 	transaction();
+	transaction(newCBPublic setfrom, newCBPublic setto, int setAmount);
 	transaction(string setfrom, string setto, int amount);
 	//accessor and mutator functions
 	void setFrom(string s);
