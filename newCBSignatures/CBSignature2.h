@@ -25,5 +25,8 @@ private :
   CBSignature2();
   //two argument constructor 
   CBSignature2(vetor<vector<int> > setz, vector<vector<int> > setc);
+  //accessor functions for the two components of the signature
+  vector<vector<int> > getz();
+  vector<vector<int> > getc();
 
 }
