@@ -351,3 +351,13 @@ void newCBSignature::setOurSig()
 	CBSignature2 tempsig(zMatrix, cMatrix);
 	oursig = tempsig;
 }
+
+void newCBSignature::setZ(vector<vector<int> > setto)
+{
+	zMatrix=setto;
+}
+
+void newCBSignature::setC(vector<vector<int> > setto)
+{
+	cMatrix=setto;
+}
