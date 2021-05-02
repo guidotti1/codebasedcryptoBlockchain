@@ -78,7 +78,7 @@ void blockchain::setChain(vector<block> setTo)
 	chain=setTo;
 }
 
-void blockchain::minePendingTransactions(string rewardAddress)
+void blockchain::minePendingTransactions(newCBPublic rewardAddress)
 {
 	block prevBlock = getLastBlock();
 	string prevHash = prevBlock.getCurrHash();
