@@ -42,6 +42,9 @@ public:
 	//functions to access the public and private keys of the algorithm
 	newCBPublic getPublicKey();
 	newCBPrivate getPrivateKey();
+	//mutator functions to change the public and private keys of the algorithm
+	void setPublicKey(newCBPublic setto);
+	void setPrivateKey(newCBPrivate setto);
 
 private:
 
