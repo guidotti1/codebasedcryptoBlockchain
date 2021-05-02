@@ -89,6 +89,7 @@ void blockchain::minePendingTransactions(string rewardAddress)
 	
 	pending.clear();
 	//giving a reward to the block that succesfully mined the transactions
+	
 	transaction newTransaction("NULL", rewardAddress, miningReward);
 	pending.push_back(newTransaction);
 }
