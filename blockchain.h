@@ -2,6 +2,7 @@
 #include<vector>
 #include"block.h"
 #include"transaction.h"
+#include"newCBSignature.h"
 #include<chrono>
 using namespace std;
 
@@ -30,7 +31,7 @@ public:
 	//mutator for the chain
 	void setChain(vector<block> setTo);
 	//send the reward for mining to rewardAddress
-	void minePendingTransactions(string rewardAddress);
+	void minePendingTransactions(newCBPublic rewardAddress);
 	//add a new transaction to pending transactions
 	void addTransaction(transaction newTransaction);
 	//accessor function for size
