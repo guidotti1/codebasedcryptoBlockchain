@@ -331,6 +331,11 @@ newCBPrivate newCBSignature::getPrivateKey()
 	return ourPrivate;
 }
 
+CBSignature2 newCBSignature::getOurSig()
+{
+	return oursig;
+}
+
 void newCBSignature::setPublicKey(newCBPublic setto)
 {
 	ourPublic = setto;
