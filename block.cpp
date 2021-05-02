@@ -125,3 +125,15 @@ void block::mineBlock(int difficulty)
 	cout<<"We mined the block with hash: " << getCurrHash()<<endl;
 }
 
+bool block::verifyTransactions()
+{
+	for (int i = 0; i < transactions.size(); i++)
+	{
+		if (transactions[i].isTransactionValid2() == false)
+		{
+			cout<<"transactions in the block are invalid"<<endl;
+			return false;
+		}
+	}
+	return true;
+}
