@@ -37,7 +37,7 @@ public:
 	void generateSignature();
 	//verify given signature
 	//involves two steps, checking if D_z(z) \ne 0 and that c=hash(m, s_y) for our calculated  s_y
-	void verifySignature();
+	string verifySignature();
 	//set message string based on what user inputs
 	void setMessage(string setto);
 	//functions to access the public and private keys of the algorithm
