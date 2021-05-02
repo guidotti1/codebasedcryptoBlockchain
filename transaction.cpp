@@ -8,12 +8,46 @@ transaction::transaction()
 	hash="";
 }
 
+transaction::transaction(newCBPublic setfrom, newCBPublic setto, int setAmount)
+{
+	fromkey=setfrom;
+	tokey=setto;
+	vector<vector<int> > usedH = fromkey.getHMatrix();
+	vector<vector<int> > usedS = fromkey.getSMatrix();
+	vector<vector<int> > usedE = tokey.getEMatrix();
+	for (int i = 0; i < usedH.size(); i++)
+	{
+		for (int j = 0; j < usedH[i].size(); j++)
+		{
+			from += to_string(usedH[i][j]);
+		}
+	}
+	for (int i = 0; i < usedS.size(); i++)
+	{
+		for (int j = 0; j < usedS[i].size(); j++)
+		{
+			from += to_string(usedS[i][j]);
+		}
+	}
+	for (int i = 0; i < usedE.size(); i++)
+	{
+		for (int j = 0; j < usedE[i].size(); j++)
+		{
+			from += to_string(usedE[i][j]);
+		}
+	}
+	amount=setAmount;
+	hash="";
+	calculateHash();
+}
+	
 transaction::transaction (string setFrom, string setTo, int setAmount)
 {
 	from=setFrom;
 	to=setTo;
 	amount=setAmount;
 	hash="";
+	calculateHash();
 }
 
 /*
