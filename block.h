@@ -40,8 +40,10 @@ public:
 	void setNonce(int newNonce);
 	//calculate hash based on id, transactions, prevhash, timestamp
 	string calculateHash();
-	
+	//mine the block based on block difficulty
 	void mineBlock(int blockDifficulty);
+	//verifies all of the transactions stored within the block
+	bool verifyTransactions();
 
 	
 	
