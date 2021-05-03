@@ -166,22 +166,20 @@ void transaction::signTransaction2(newCBPublic usedPublic, newCBPrivate usedPriv
 	vector<vector<int> > useds = usedPublic.getSMatrix();
 	
 	string compare="";
-	string tobehashed="";
 	for (int i = 0; i < usedh.size(); i++)
 	{
 		for (int j = 0; j < usedh[i].size(); j++)
 		{
-			tobehashed+=to_string(usedh[i][j]);
+			compare+=to_string(usedh[i][j]);
 		}
 	}
 	for (int i = 0; i < useds.size(); i++)
 	{
 		for (int j = 0; j < useds[i].size(); j++)
 		{
-			tobehashed+=to_string(useds[i][j]);
+			compare+=to_string(useds[i][j]);
 		}
 	}
-	compare = sha256(tobehashed);
 	
 	if (compare != from)
 	{
