@@ -208,15 +208,15 @@ bool transaction::isTransactionValid2()
 	
 	newCBSignature temp(16381, 400, 100, 218, 156, 141, 151, 3420, 3375);
 	temp.setPublicKey(fromkey);
-
+	vector<vector<int> > usedh = fromkey.getHMatrix();
+	vector<vector<int> > useds = fromkey.getSMatrix();
 	vector<vector<int> > usedz = usedsig.getz();
-	vector<vector<int> > usedc = usedsig.getc();
+	vector<vector<int> > usedc = usedsig.getc();	
 	temp.setZ(usedz);
 	temp.setC(usedc);
 	temp.setOurSig();
 	temp.setMessage(hash);
 	string res = temp.verifySignature();
-	cout<<"9"<<endl;
 	if (res=="passes")
 	{
 		cout<<"signature on the transaction is valid"<<endl;
