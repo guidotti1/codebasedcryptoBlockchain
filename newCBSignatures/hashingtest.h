@@ -4,7 +4,7 @@
 #include<iostream>
 #include <fstream>
 #include "sha256.h"
-//#include<bits/stdc++.h>
+#include<bits/stdc++.h>
 #include<stdlib.h>
 #include<chrono>
 #include <vector>
