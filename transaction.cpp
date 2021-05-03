@@ -210,15 +210,6 @@ bool transaction::isTransactionValid2()
 	temp.setPublicKey(fromkey);
 
 	vector<vector<int> > usedz = usedsig.getz();
-	cout<<"z in valid program "<<endl;
-	for (int i =0; i < usedz.size(); i++)
-	{
-		for (int j =0; j <usedz[i].size(); i++)
-		{
-		cout<<usedz[i][j]<<endl;
-		}
-	}
-
 	vector<vector<int> > usedc = usedsig.getc();
 	temp.setZ(usedz);
 	temp.setC(usedc);
