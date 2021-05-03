@@ -40,7 +40,10 @@ public:
 	//0 & 3 arg constructors
 	transaction();
 	transaction(newCBPublic setfrom, newCBPublic setto, int setAmount);
-	transaction(string setfrom, string setto, int amount);
+	transaction(string setfrom, string setto, int setAmount);
+	//note - I only really use this one in blockchain.minePendingTransactions() function
+	//in which case setfrom = "NULL" and setto is the reward address
+	transaction(string setfrom, newCBPublic setto, int setAmount);
 	//accessor and mutator functions
 	void setFrom(string s);
 	void setTo(string t);
