@@ -39,7 +39,7 @@ public:
 	//increment size if a block is added
 	void updateSize();
 	//get the balance for a specific address by checking all transactions involving that address
-	int getBalanceOfAddress(string address);
+	int getBalanceOfAddress(newCBPublic address);
 		
 	
 private:
