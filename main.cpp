@@ -54,7 +54,9 @@ newCBPrivate myPrivate = temp.getPrivateKey();
 
 transaction firstTransaction(firstPublic, secondPublic, 100);
 transaction secondTransaction(secondPublic, firstPublic, 50);
+cout<<"adding a first transaction "<<endl;
 mychain.addTransaction(firstTransaction);
+cout<<"adding a second transaction "<<endl;
 mychain.addTransaction(secondTransaction);
 
 cout<<"starting mining"<<endl;
@@ -69,10 +71,10 @@ cout<<"Checking again"<<endl;
 cout<<mychain.getBalanceOfAddress(myPublic)<<endl;
 
 	
-
+/*
 if (sigChoice == 1){
 	//secure parameters for KKS signature as described by digital signature paper
-	/*
+	
 	string setq="2";
 	string setN="2000";
 	string setK="1100";
@@ -84,7 +86,7 @@ if (sigChoice == 1){
 	//note - message is a random 256 character binary string
 	trial.setMessage("0101110010110000001010100010011001101100110001000110010110010010011110110001001011000100100110010001011111000111011110010110001101001100110001000001110110011010010101100110010110001011010011111101110000100000110100000001101101110100111000101011110100101011");	
 	unsigned int microsecond = 1000000;
-	*/
+	
 
 
 	while (1 == 1)
@@ -140,6 +142,7 @@ else if (sigChoice == 2) {
 	cout<<"generating public and private keys for new CB System"<<endl;
 	ourSignature.generatePublicPrivateKey();
 }
+*/
 
 
 
