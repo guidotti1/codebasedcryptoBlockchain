@@ -1,15 +1,17 @@
 #include<iostream>
 #include<vector>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include<unistd.h>
+#include<string>
+#include<bits/stdc++.h> 
 #include"block.h"
 #include"blockchain.h"
 #include"sha256.h"
 #include"transaction.h"
 #include"newCBSignature.h"
 #include"encryption.h"
-#include<stdlib.h>
-#include<unistd.h>
-#include<string>
-#include<bits/stdc++.h> 
 
 using namespace std;
 
@@ -18,7 +20,7 @@ string convertHashToBinary(string hash);
 
 int main()
 {
-
+srand (time(NULL));
 //the user is able to choose their own block difficulty and the number of blocks that the chain will have 
 int blockDifficulty=0;
 int desiredReward=0;
@@ -32,32 +34,48 @@ cout<<"Enter 1 for KKS, Enter 2 for New CB Signature, Enter 3 for Stern Identifi
 int sigChoice;
 cin >> sigChoice;
 
-/*
-cout<<"How many blocks do you want the chain to have? "<<endl;
-cin>>desiredNumberBlocks;
-*/
-
+int desiredNumberTransactions;
+cout<<"How many transactions do you want to process in the chain? "<<endl;
+cin >> desiredNumberTransactions;
 blockchain mychain(blockDifficulty, desiredReward);
 
+vector<newCBPublic> publicKeys;
+vector<newCBPrivate> privateKeys;
+
 newCBSignature temp(16381, 400, 100, 218, 156, 141, 151, 3420, 3375);
-temp.generatePublicPrivateKey();
-newCBPublic firstPublic = temp.getPublicKey();
-newCBPrivate firstPrivate = temp.getPrivateKey();
-temp.generatePublicPrivateKey();
-newCBPublic secondPublic = temp.getPublicKey();
-newCBPrivate secondPrivate = temp.getPrivateKey();
-	
+for (int i = 0; i < desiredNumberTransactions; i++)
+{
+	temp.generatePublicPrivateKey();
+	publicKeys.push_back(temp.getPublicKey());
+	privateKeys.push_back(temp.getPrivateKey());
+}
+
+vector<transaction> transactionsToBeProcessed;
+int nextTransactionAmount;
+int fromLocation;
+int toLocation;
+for (int i = 0; i < desiredNumberTransactions; i++)
+{
+	nextTransactionAmount = rand() % 40 + 1;
+	nextTransactionAmount = nextTransactionAmount * 5;
+	fromLocation = rand() % publicKeys.size();
+	toLocation = rand() % publicKeys.size();
+	while (toLocation == fromLocation)
+	{
+		toLocation = rand() % publicKeys.size();
+
+	}
+	transaction nextTransaction(publicKeys[fromLocation], publicKeys[toLocation], nextTransactionAmount);
+	nextTransaction.signTransaction2(publicKeys[fromLocation], privateKeys[fromLocation]);
+	cout<<"adding a new transaction to the pool "<<endl;
+	mychain.addTransaction(nextTransaction); 
+}
+
+cout<<"generating your public and private keys"<<endl;
+cout<<"for simplicity, you will be the only one mining the pending transactions in the blockchain"<<endl;	
 temp.generatePublicPrivateKey();
 newCBPublic myPublic = temp.getPublicKey();
 newCBPrivate myPrivate = temp.getPrivateKey();
-
-
-transaction firstTransaction(firstPublic, secondPublic, 100);
-transaction secondTransaction(secondPublic, firstPublic, 50);
-cout<<"adding a first transaction "<<endl;
-mychain.addTransaction(firstTransaction);
-cout<<"adding a second transaction "<<endl;
-mychain.addTransaction(secondTransaction);
 
 cout<<"starting mining"<<endl;
 mychain.minePendingTransactions(myPublic);
@@ -65,10 +83,16 @@ mychain.minePendingTransactions(myPublic);
 cout<<"My balance"<<endl;
 cout<<mychain.getBalanceOfAddress(myPublic)<<endl;
 
-
 mychain.minePendingTransactions(myPublic);
 cout<<"Checking again"<<endl;
 cout<<mychain.getBalanceOfAddress(myPublic)<<endl;
+
+cout<<"let's check balances of all other adresses of nodes in the chain"<<endl;
+for (int i =0; i < publicKeys.size(); i++)
+{
+	cout<<"for address number " << i <<" in the vector of nodes, the balance is :"<<endl;
+	cout<<mychain.getBalanceOfAddress(publicKeys[i])<<endl;
+}
 
 	
 /*
@@ -125,76 +149,7 @@ if (sigChoice == 1){
 		}
 	}
 }
-
-else if (sigChoice == 2) {
-	//secure parameters for new CB signature as described by that paper
-	int newsetq = 16381;
-	int newsetn = 400;
-	int newsetr = 100;
-	int newsetb = 218;
-	int newsettsube = 156;
-	int newsetwsube = 141;
-	int newsetwsubc = 151;
-	int newsetgammaBar = 3420;
-	int newsetgamma = 3375;
-	//parameters in order ::  q, n, r, b, t_e, w_e, w_c, gammaBar, gamma
-	newCBSignature ourSignature(newsetq, newsetn, newsetr, newsetb, newsettsube, newsetwsube, newsetwsubc, newsetgammaBar, newsetgamma);
-	cout<<"generating public and private keys for new CB System"<<endl;
-	ourSignature.generatePublicPrivateKey();
-}
 */
-
-
-
-
-
-
-
-
-
-/*
-cout<<"We are going to create a simple blockchain with " << desiredNumberBlocks << " blocks"<<endl;
-//cout<<"All that we ask is that you enter in some mock data for each transaction "<<endl;
-vector<int> amounts;
-int nextamt;
-while (mychain.getSize() != desiredNumberBlocks)
-{
-	amounts.clear();
-	cout<<"How many transactions you want to enter? (enter a sequence of amounts ending in -1)"<<endl;
-	cin>>nextamt;
-	while (nextamt != -1)
-	{
-		amounts.push_back(nextamt);
-		cin>>nextamt;
-	}
-	block rewardBlock = mychain.getLastBlock();
-	string rewardAddress = rewardBlock.getPrevHash();
-	transaction nextTransction(rewardAddress, nextamt)
-	mychain.minePendingTransactions();
-}
-string nextAmount;
-for (int i = 1; i < desiredNumberBlocks; i++)
-{
-	blockID++;
-	//get the information for this next transaction from the user
-	cout<<"Enter transaction amount and press enter "<<endl;
-	cin>>nextAmount;
-	transaction newTransaction(nextAmount, i-1, i);
-	block recentBlock = mychain.getLastBlock();
-	//create new block using unique ID and transaction you just entered
-	mychain.addBlock(nextAmount);
-	block nextBlock=mychain.getLastBlock();
-}
-if (mychain.isValid())
-{
-	cout<<"great job your blockchain is valid "<<endl;
-}
-else
-{
-	cout<<"oops, it seems your blockchain is invalid "<<endl;
-}
-*/
-
 
 return 0;
 
