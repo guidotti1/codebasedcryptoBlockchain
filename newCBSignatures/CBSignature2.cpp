@@ -1,4 +1,4 @@
-#include "CBSignature2.h";
+#include "CBSignature2.h"
 
 
 
@@ -11,7 +11,7 @@ CBSignature2::CBSignature2()
 }
 
 //two argument constructor 
-CBSignature2::CBSignature2(vetor<vector<int> > setz, vector<vector<int> > setc)
+CBSignature2::CBSignature2(vector<vector<int> > setz, vector<vector<int> > setc)
 {
   z = setz;
   c = setc;
