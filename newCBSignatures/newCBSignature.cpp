@@ -295,7 +295,9 @@ string newCBSignature::verifySignature()
 		{
 		cout<<zMatrix[i][j]<<" ";
 		}
+		cout<<endl;
 	}
+	cout<<endl<<endl<<endl;
 	bool check1 = checkZ();
 	cout<<"1"<<endl;
 	vector<vector<int> > hMatrix = ourPublic.getHMatrix();
