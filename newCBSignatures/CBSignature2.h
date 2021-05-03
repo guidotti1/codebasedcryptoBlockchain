@@ -14,19 +14,19 @@ using namespace std;
 class CBSignature2
 {
 
-public : 
-
+private : 
   vector<vector<int> > z;
   vector<vector<int> > c;
 
-private :
-
+public :
   //default constructor
   CBSignature2();
   //two argument constructor 
-  CBSignature2(vetor<vector<int> > setz, vector<vector<int> > setc);
+  CBSignature2(vector<vector<int> > setz, vector<vector<int> > setc);
   //accessor functions for the two components of the signature
   vector<vector<int> > getz();
   vector<vector<int> > getc();
 
-}
+};
+
+#endif /* CBSIGNATURE2.H */
