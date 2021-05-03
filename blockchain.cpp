@@ -110,8 +110,7 @@ void blockchain::addTransaction(transaction newTransaction)
 	{
 		cout<<"new transaction is not valid"<<endl;
 		return;
-	}
-		
+	}		
 	pending.push_back(newTransaction);
 }
 
