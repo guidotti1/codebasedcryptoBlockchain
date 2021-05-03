@@ -297,6 +297,15 @@ string newCBSignature::verifySignature()
 		}
 		cout<<endl;
 	}
+	cout<<"c in verify program "<<endl;
+	for (int i =0; i < cMatrix.size(); i++)
+	{
+		for (int j =0; j <cMatrix[i].size(); j++)
+		{
+		cout<<cMatrix[i][j]<<" ";
+		}
+		cout<<endl;
+	}
 	cout<<endl<<endl<<endl;
 	bool check1 = checkZ();
 	cout<<"1"<<endl;
@@ -323,8 +332,21 @@ string newCBSignature::verifySignature()
 	string gf3Hash = ourhash.getHashGF3();
 	vector<int> gfqHash = ourhash.getHashGFq(gf3Hash);
 	vector<int> c=gfqHash;
-	
+	cout<<"calculated c"<<endl;
+	for (int i = 0; i < c.size(); i++)
+	{
+		cout<<c[i]<< " ";
+	}
+	cout<<endl<<endl<<endl;
 	bool check2 = (c==cMatrix[0]);
+	if (check1)
+	{
+		cout<<"step 1 is fine"<<endl;
+	}
+	if (check2)
+	{
+		cout<<"step 2 is fine"<<endl;
+	}
 	if (check2 && check1)
 	{
 		return "passes";
