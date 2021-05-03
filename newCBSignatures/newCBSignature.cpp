@@ -288,10 +288,22 @@ void newCBSignature::generateSignature()
 
 string newCBSignature::verifySignature()
 {
+	cout<<"z in verify program "<<endl;
+	for (int i =0; i < zMatrix.size(); i++)
+	{
+		for (int j =0; j <zMatrix[i].size(); i++)
+		{
+		cout<<zMatrix[i][j]<<endl;
+		}
+	}
 	bool check1 = checkZ();
+cout<<"1"<<endl;
 	vector<vector<int> > hMatrix = ourPublic.getHMatrix();
+cout<<"2"<<endl;
 	vector<vector<int> > hTranspose = operations.generateTranspose(hMatrix);
+cout<<"3"<<endl;
 	vector<vector<int> > zTimesHtranspose =  operations.matrixMultiplication(q, zMatrix, hTranspose);
+cout<<"4"<<endl;
 	vector<vector<int> > sMatrix = ourPublic.getSMatrix();
 	vector<vector<int> > cMatrixTimesSMatrix = operations.matrixMultiplication(q, cMatrix, sMatrix);
 
@@ -304,6 +316,7 @@ string newCBSignature::verifySignature()
 			ssubystring+=to_string(ssubyCheck[i][j]);
 		}
 	}
+
 	hashingtest ourhash(q, n, b, wsubC, message, ssubystring);
 	string gf3Hash = ourhash.getHashGF3();
 	vector<int> gfqHash = ourhash.getHashGFq(gf3Hash);
