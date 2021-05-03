@@ -291,19 +291,19 @@ string newCBSignature::verifySignature()
 	cout<<"z in verify program "<<endl;
 	for (int i =0; i < zMatrix.size(); i++)
 	{
-		for (int j =0; j <zMatrix[i].size(); i++)
+		for (int j =0; j <zMatrix[i].size(); j++)
 		{
-		cout<<zMatrix[i][j]<<endl;
+		cout<<zMatrix[i][j]<<" ";
 		}
 	}
 	bool check1 = checkZ();
-cout<<"1"<<endl;
+	cout<<"1"<<endl;
 	vector<vector<int> > hMatrix = ourPublic.getHMatrix();
-cout<<"2"<<endl;
+	cout<<"2"<<endl;
 	vector<vector<int> > hTranspose = operations.generateTranspose(hMatrix);
-cout<<"3"<<endl;
+	cout<<"3"<<endl;
 	vector<vector<int> > zTimesHtranspose =  operations.matrixMultiplication(q, zMatrix, hTranspose);
-cout<<"4"<<endl;
+	cout<<"4"<<endl;
 	vector<vector<int> > sMatrix = ourPublic.getSMatrix();
 	vector<vector<int> > cMatrixTimesSMatrix = operations.matrixMultiplication(q, cMatrix, sMatrix);
 
