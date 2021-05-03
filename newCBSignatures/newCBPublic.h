@@ -22,6 +22,8 @@ public:
 	//mutators
 	void setHMatrix(vector<vector<int> > setto);
 	void setSMatrix(vector<vector<int> > setto);
+	//overloading == operator -- checks to see if compare1 is equal to compare2 by checking if their 2D matrices are equal
+	friend bool operator==(newCBPublic compare1, newCBPublic compare2);
 
 private:
 	vector<vector<int> > HMatrix;
