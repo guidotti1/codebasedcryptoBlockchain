@@ -153,20 +153,7 @@ transaction::transaction(string setfrom, publickey setto, int setAmount)
 	hash="";
 	calculateHash();
 }
-/*
-void::transaction setKKSSig()
-{
-	string setq="2";
-	string setN="2000";
-	string setK="1100";
-	string setn="1000";
-	string setk="256";
-	string sett1="440";
-	string sett2="560";
-	encryption temp(setq, setN, setK, setn, setk, sett1, sett2);
-	KKSsig = temp;
-}
-*/
+
 
 string transaction::getFrom()
 {
@@ -259,14 +246,15 @@ void transaction::signTransaction1(publickey usedPublic, privatekey usedPrivate)
 	{
 		cout<<"you can't sign a transaction from other wallets"<<endl;
 	}
-	
-	encryption temp("2", "2000", "1100", "1000", "256", "440", "560");
+	encryption temp("2", "2000", "1100", "1000", "512", "440", "560");
+	//encryption temp("2", "2000", "1100", "1000", "256", "440", "560");
 	temp.setKeys(usedg, usedh, usedf, usedj);
 	calculateHash();  
 	
 	cout<<"this will be our message for the new cb system (hash of transaction) " << hash<<endl;
 	cout<<"we must convert this to binary in order to sign " <<endl;
-	temp.setMessage(hash);
+	cout<<"conversion to binary : " << convertHashToBinary()<<endl;
+	temp.setMessage(convertHashToBinary());
 	int microsecond = 1000;
 	//sign message program
 	temp.signMessage();
@@ -324,13 +312,13 @@ bool transaction::isTransactionValid1()
 	{
 		return true;
 	}
-	
-	encryption temp("2", "2000", "1100", "1000", "256", "440", "560");
+	encryption temp("2", "2000", "1100", "1000", "512", "440", "560");
+	//encryption temp("2", "2000", "1100", "1000", "256", "440", "560");
 	temp.setPublicKey(fromkeyKKS);
 	vector<vector<int> > usedf = fromkeyKKS.getF();
 	vector<vector<int> > usedh = fromkeyKKS.getH();
 	temp.setOmega(KKSOmega);
-	temp.setMessage(hash);
+	temp.setMessage(convertHashToBinary());
 	//verifying the signature omega for the given message hash
 	temp.verifySignature();
 	int microsecond = 1000;
