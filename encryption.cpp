@@ -457,10 +457,6 @@ void encryption::setOmega(string ourOmega)
 	omega=ourOmega;
 }
 
-void encryption::setPublicKey(publickey setpublic)
-{
-	ourPublic=setpublic;
-}
 
 void encryption::verifySignature()
 {
@@ -613,7 +609,24 @@ bool encryption::readVerification()
 			return false;
 		}
 	}
-
-
 }
 
+publickey encryption::getPublicKey()
+{
+	return ourPublic;
+}
+
+privatekey encryption::getPrivateKey()
+{
+	return ourPrivate;
+}
+
+string encryption::getOmega()
+{
+	return omega;
+}
+
+string encryption::getMessage()
+{
+	return message;
+}
