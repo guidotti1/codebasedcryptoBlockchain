@@ -45,7 +45,7 @@ cin >> desiredNumberTransactions;
 
 if (sigChoice == 1)
 {
-	runSimulation1(blockDifficulty, desiredReward, desiredNumberTransactions)
+	runSimulation1(blockDifficulty, desiredReward, desiredNumberTransactions);
 }
 else if (sigChoice == 2)
 {
