@@ -51,7 +51,7 @@ transaction::transaction(newCBPublic setfrom, newCBPublic setto, int setAmount)
 	calculateHash();
 }
 
-transaction::transactio(publickey setfrom, privatekey setto, int setAmount)
+transaction::transaction(publickey setfrom, privatekey setto, int setAmount)
 {
 	fromkeyKKS = setfrom;
 	tokeyKKS = setto;
@@ -233,11 +233,11 @@ void transaction::calculateHash()
 	hash = sha256(from + to + to_string(amount));
 }
 
-void transaction::signTransaction1(publickey usedPublic, privateKey usedPrivate)
+void transaction::signTransaction1(publickey usedPublic, privatekey usedPrivate)
 {
 	vector<vector<int> > usedf = usedPublic.getF();
 	vector<vector<int> > usedh = usedPublic.getH();
-	vector<vector<int> > usedj = usedPrivate.getJ();
+	vector<int> usedj = usedPrivate.getJ();
 	vector<vector<int> > usedg = usedPrivate.getG();
 	string compare="";
 	for (int i = 0; i < usedf.size(); i++)
@@ -266,12 +266,12 @@ void transaction::signTransaction1(publickey usedPublic, privateKey usedPrivate)
 	
 	cout<<"this will be our message for the new cb system (hash of transaction) " << hash<<endl;
 	temp.setMessage(hash);
-			
+	int microsecond = 1000;
 	//sign message program
 	temp.signMessage();
 	//run sign message program
 	temp.runMagmaFile("2");
-	usleep(3 * microsecond);
+	usleep(3 * microsecond); //waits 3 seconds 
 	//read signature
 	temp.readSignature();	
 	KKSOmega = temp.getMessage();
@@ -326,12 +326,13 @@ bool transaction::isTransactionValid1()
 	
 	encryption temp("2", "2000", "1100", "1000", "256", "440", "560");
 	temp.setPublicKey(fromkey);
-	vector<vector<int> > usedf = fromkey.getFMatrix();
-	vector<vector<int> > usedh = fromkey.getHMatrix();
+	vector<vector<int> > usedf = fromkeyKKS.getFMatrix();
+	vector<vector<int> > usedh = fromkeyKKS.getHMatrix();
 	temp.setOmega(KKSOmega);
 	temp.setMessage(hash);
 	//verifying the signature omega for the given message hash
 	trial.verifySignature();
+	int microsecond = 1000;
 	usleep(3 * microsecond);
 	//running verify signature program
 	trial.runMagmaFile("3");
