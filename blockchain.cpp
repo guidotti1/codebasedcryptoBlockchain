@@ -4,14 +4,18 @@
 blockchain::blockchain()
 {
 	createGenesisBlock();
+	difficulty = 0;
+	miningReward = 0;
+	algorithmChoice = 2;
 	blockchainSize=0;
 }
 
-blockchain::blockchain(int setDifficulty, int setReward)
+blockchain::blockchain(int setDifficulty, int setReward, int setSig)
 {
 	createGenesisBlock();
 	difficulty=setDifficulty;
 	miningReward = setReward;
+	algorithmChoice = setSig;
 	blockchainSize=0;
 }
 
