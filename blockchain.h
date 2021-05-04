@@ -16,8 +16,8 @@ class blockchain
 public:
 	//0 argument constructor
 	blockchain();
-	//2 argument constructor taking in desired difficulty & transaction reward
-	blockchain(int setDifficulty, int setReward);
+	//3 argument constructor taking in desired difficulty, transaction reward, and chosen digital signature algorithm
+	blockchain(int setDifficulty, int setReward, int setSig);
 	//create the first block
 	void createGenesisBlock();
 	//access the most recent block
@@ -53,6 +53,9 @@ private:
 	int miningReward;
 	//number of elements in blockchain
 	int blockchainSize;
+	//determines what kind of digital signature algorithm we are using
+	//1 : KKS, 2 : new CB sig, 3 : Stern identification
+	int algorithmChoice;
 	
 
 
