@@ -1,6 +1,7 @@
 #include<iostream>
 #include<string>
 #include<ctime>
+#include <bitset>
 #include<time.h>
 #include<stdio.h>
 #include<stdlib.h>
@@ -81,9 +82,9 @@ public:
 	bool isTransactionValid1();
 	//verify the signature for the transaction using method 2 - new CB signature algorithm
 	bool isTransactionValid2();
+	//for the KKS algorithm, we need to convert the hash of the transaction information to binary
+	string convertHashToBinary();
 	
-	
-
 };
 
 
