@@ -265,6 +265,7 @@ void transaction::signTransaction1(publickey usedPublic, privatekey usedPrivate)
 	calculateHash();  
 	
 	cout<<"this will be our message for the new cb system (hash of transaction) " << hash<<endl;
+	cout<<"we must convert this to binary in order to sign " <<endl;
 	temp.setMessage(hash);
 	int microsecond = 1000;
 	//sign message program
@@ -377,4 +378,15 @@ bool transaction::isTransactionValid2()
 		cout<<"signature on the transaction is invalid"<<endl;
 		return false;
 	}
+}
+
+string transaction::convertHashToBinary()
+{
+	string ans="";
+	for (size_t i = 0; i < hash.size(); ++i)
+	{
+		bitset<8> b(hash.c_str()[i]);
+    		ans+= b.to_string();
+	}
+	return ans;
 }
