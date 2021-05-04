@@ -73,7 +73,8 @@ void runSimulation1(int blockDifficulty, int desiredReward, int desiredNumberTra
 	
 	vector<publickey> publicKeys;
 	vector<privatekey> privateKeys;
-	encryption temp("2", "2000", "1100", "1000", "256", "440", "560");
+	/encryption temp("2", "2000", "1100", "1000", "512", "440", "560");
+	//encryption temp("2", "2000", "1100", "1000", "256", "440", "560");
 	int microsecond = 1000;
 	for (int i = 0; i < desiredNumberTransactions; i++)
 	{
