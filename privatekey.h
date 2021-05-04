@@ -22,7 +22,7 @@ public:
 	void setGMatrix(vector<vector<int> > setG);
 	//accessor functions
 	vector<int> getJ();
-	vector< vector<int> > getG();
+	vector<vector<int> > getG();
 
 	
 
