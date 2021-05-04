@@ -30,16 +30,20 @@ public:
 	vector<block> getChain();
 	//mutator for the chain
 	void setChain(vector<block> setTo);
-	//send the reward for mining to rewardAddress
+	//send the reward for mining to rewardAddress (for the case of new CB signatures)
 	void minePendingTransactions(newCBPublic rewardAddress);
+	//send the reward for mining to rewardAddress (for the case of KKS signatures)
+	void minePendingTransactions(publickey rewardAddress);
 	//add a new transaction to pending transactions
 	void addTransaction(transaction newTransaction);
 	//accessor function for size
 	int getSize();
 	//increment size if a block is added
 	void updateSize();
-	//get the balance for a specific address by checking all transactions involving that address
+	//get the balance for a specific address by checking all transactions involving that address (for the case of new CB signatures)
 	int getBalanceOfAddress(newCBPublic address);
+	//get the balance for a specific address by checking all transactions involving that address (for the case of KKS signatures)
+	int getBalanceOfAddress(publickey address);
 		
 	
 private:
