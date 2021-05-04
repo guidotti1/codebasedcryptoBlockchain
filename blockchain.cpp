@@ -98,6 +98,20 @@ void blockchain::minePendingTransactions(newCBPublic rewardAddress)
 	pending.push_back(newTransaction);
 }
 
+void blockchain::minePendingTransactions(publickey rewardAddress)
+{
+	block prevBlock = getLastBlock();
+	string prevHash = prevBlock.getCurrHash();
+	block newBlock(time(NULL), prevHash, pending);
+	chain.push_back(newBlock);
+	cout<<"we have mined a block"<<endl;
+	
+	pending.clear();
+	
+	transaction.newTransaction("NULL", rewardAddress, miningReward);
+	pending.push_back(newTransaction);
+}
+
 void blockchain::addTransaction(transaction newTransaction)
 {
 	if (newTransaction.getFrom() == "")
@@ -155,6 +169,36 @@ int blockchain::getBalanceOfAddress(newCBPublic address)
 			{
 				fromAddress=currTransactions[j].getfromkey();	
 				toAddress=currTransactions[j].gettokey();
+				amount=currTransactions[j].getAmount();
+				if (fromAddress==address)
+				{
+					result-=amount;
+				}
+				if (toAddress==address)
+				{
+					result+=amount;
+				}
+			}
+			currTransactions.clear();
+		}
+	return result;
+}
+
+
+int blockchain::getBalanceOfAddress(publickey address)
+{
+	int result=0;
+	vector<transaction> currTransactions;
+	publickey fromAddress;
+	publickey toAddress;
+	int amount;
+	for (int i = 0; i < chain.size(); i++)
+		{
+			currTransactions=chain[i].getTransactions();
+			for (int j = 0; j < currTransactions.size(); j++)
+			{
+				fromAddress=currTransactions[j].getfromkeyKKS();	
+				toAddress=currTransactions[j].gettokeyKKS();
 				amount=currTransactions[j].getAmount();
 				if (fromAddress==address)
 				{
