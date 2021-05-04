@@ -193,6 +193,16 @@ newCBPublic transaction::gettokey()
 	return tokey;
 }
 
+publickey transaction::getfromkeyKKS()
+{
+	return fromkeyKKS;
+}
+
+privatekey transaction::gettokeyKKS()
+{
+	return tokeyKKS;
+}
+
 void transaction::setFrom(string s)
 {
 	from=s;
