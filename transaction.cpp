@@ -263,7 +263,7 @@ void transaction::signTransaction1(publickey usedPublic, privatekey usedPrivate)
 	usleep(3 * microsecond); //waits 3 seconds 
 	//read signature
 	temp.readSignature();	
-	KKSOmega = temp.getMessage();
+	KKSOmega = temp.getOmega();
 }
 
 void transaction::signTransaction2(newCBPublic usedPublic, newCBPrivate usedPrivate)
