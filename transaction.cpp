@@ -50,6 +50,49 @@ transaction::transaction(newCBPublic setfrom, newCBPublic setto, int setAmount)
 	hash="";
 	calculateHash();
 }
+
+transaction::transactio(publickey setfrom, privatekey setto, int setAmount)
+{
+	fromkeyKKS = setfrom;
+	tokeyKKS = setto;
+	vector<vector<int> > fromkeyF = fromkeyKKS.getF();
+	vector<vector<int> > fromkeyH = fromkeyKKS.getH();
+	vector<vector<int> > tokeyF = tokeyKKS.getF();
+	vector<vector<int> > tokeyH = tokeyKKS.getH();
+	//storing all the fromkey information in a string so we can sha256() hash it
+	for (int i = 0; i < fromkeyF.size(); i++)
+	{
+		for (int j = 0; j < fromkeyF[i].size(); j++)
+		{
+			from += to_string(fromkeyF[i][j]);
+		}
+	}
+	for (int i = 0; i < fromkeyH.size(); i++)
+	{
+		for (int j = 0; j < fromkeyH[i].size(); j++)
+		{
+			from += fromkeyH(fromKeyS[i][j]);
+		}
+	}
+	//same for the tokey information
+	for (int i = 0; i < tokeyF.size(); i++)
+	{
+		for (int j = 0; j < tokeyF[i].size(); j++)
+		{
+			to += to_string(tokeyF[i][j]);
+		}
+	}
+	for (int i = 0; i < tokeyH.size(); i++)
+	{
+		for (int j = 0; j < tokeyH[i].size(); j++)
+		{
+			to += to_string(tokeyH[i][j]);
+		}
+	}
+	amount=setAmount;
+	hash="";
+	calculateHash();
+}
 	
 transaction::transaction(string setFrom, string setTo, int setAmount)
 {
@@ -80,6 +123,31 @@ transaction::transaction(string setfrom, newCBPublic setto, int setAmount)
 		for (int j = 0; j < toKeyS[i].size(); j++)
 		{
 			from += to_string(toKeyS[i][j]);
+		}
+	}
+	hash="";
+	calculateHash();
+}
+
+transaction::transaction(string setfrom, publickey setto, int setAmount)
+{
+	from=setfrom;
+	tokeyKKS = setto;
+	amount=setAmount;
+	vector<vector<int> > tokeyF = tokeyKKS.getF();
+	vector<vector<int> > tokeyH = tokeyKKS.getH();
+	for (int i = 0; i < tokeyF.size(); i++)
+	{
+		for (int j = 0; j < tokeyF[i].size(); j++)
+		{
+			to += to_string(tokeyF[i][j]);
+		}
+	}
+	for (int i = 0; i < tokeyH.size(); i++)
+	{
+		for (int j = 0; j < tokeyH[i].size(); j++)
+		{
+			to += to_string(tokeyH[i][j]);
 		}
 	}
 	hash="";
@@ -155,9 +223,48 @@ void transaction::calculateHash()
 	hash = sha256(from + to + to_string(amount));
 }
 
-void transaction::signTransaction1()
+void transaction::signTransaction1(publickey usedPublic, privateKey usedPrivate)
 {
-	//setKKSSig();
+	vector<vector<int> > usedf = usedPublic.getF();
+	vector<vector<int> > usedh = usedPublic.getH();
+	vector<vector<int> > usedj = usedPrivate.getJ();
+	vector<vector<int> > usedg = usedPrivate.getG();
+	string compare="";
+	for (int i = 0; i < usedf.size(); i++)
+	{
+		for (int j = 0; j < usedf[i].size(); j++)
+		{
+			compare+=to_string(usedf[i][j]);
+		}
+	}
+	for (int i = 0; i < usedh.size(); i++)
+	{
+		for (int j = 0; j < usedh[i].size(); j++)
+		{
+			compare+=to_string(usedh[i][j]);
+		}
+	}
+	
+	if (compare != from)
+	{
+		cout<<"you can't sign a transaction from other wallets"<<endl;
+	}
+	
+	encryption temp("2", "2000", "1100", "1000", "256", "440", "560");
+	temp.setKeys(usedg, usedh, usedf, usedj);
+	calculateHash();  
+	
+	cout<<"this will be our message for the new cb system (hash of transaction) " << hash<<endl;
+	temp.setMessage(hash);
+			
+	//sign message program
+	temp.signMessage();
+	//run sign message program
+	temp.runMagmaFile("2");
+	usleep(3 * microsecond);
+	//read signature
+	temp.readSignature();	
+	KKSOmega = temp.getMessage();
 }
 
 void transaction::signTransaction2(newCBPublic usedPublic, newCBPrivate usedPrivate)
@@ -197,6 +304,38 @@ void transaction::signTransaction2(newCBPublic usedPublic, newCBPrivate usedPriv
 	temp.generateSignature();
 	
 	usedsig =  temp.getOurSig();
+}
+
+bool transaction::isTransactionValid1()
+{
+	//if from = "NULL" 
+	if (from == "NULL")
+	{
+		return true;
+	}
+	
+	encryption temp("2", "2000", "1100", "1000", "256", "440", "560");
+	temp.setPublicKey(fromkey);
+	vector<vector<int> > usedf = fromkey.getFMatrix();
+	vector<vector<int> > usedh = fromkey.getHMatrix();
+	temp.setOmega(KKSOmega);
+	temp.setMessage(hash);
+	//verifying the signature omega for the given message hash
+	trial.verifySignature();
+	usleep(3 * microsecond);
+	//running verify signature program
+	trial.runMagmaFile("3");
+	bool verificationControl = trial.readVerification();
+	if (verificationControl)
+	{
+		cout<<"KKS signature on the transaction is valid"<<endl;
+		return true;
+	}
+	else 
+	{
+		cout<<"KKS signature on the transaction is invalid"<<endl;
+		return false;
+	}
 }
 
 bool transaction::isTransactionValid2()
