@@ -24,7 +24,7 @@ vector<int> privatekey::getJ()
 	return  JVector;
 }
 
-vector< vector<int> > privatekey::getG()
+vector<vector<int> > privatekey::getG()
 {
 	return GMatrix;
 }
