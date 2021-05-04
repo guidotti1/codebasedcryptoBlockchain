@@ -62,7 +62,11 @@ public:
 	void setKeys(vector<vector<int> > G, vector<vector<int> > H, vector<vector<int> > F, vector<int> J);
 	void setMessage(string ourMessage);
 	void setOmega(string ourOmega);
-	void setPublicKey(publickey setpublic);
+	//accessor functions for public and private keys, and for the signature omega/message m
+	publickey getPublicKey();
+	privatekey getPrivateKey();
+	string getOmega();
+	string getMessage();
 
 	
 	
