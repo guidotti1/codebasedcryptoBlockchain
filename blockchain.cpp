@@ -110,12 +110,25 @@ void blockchain::addTransaction(transaction newTransaction)
 		cout<<"trying to add a transaction with an empty to address which is not allowed"<<endl;
 		return;
 	}
-	if (newTransaction.isTransactionValid2() == false)
+	if (algorithmChoice == 1)
 	{
-		cout<<"new transaction is not valid"<<endl;
-		return;
-	}		
-	pending.push_back(newTransaction);
+		if (newTransaction.isTransactionValid1() == false)
+		{
+			cout<<"new transaction is not valid"<<endl;
+			return;
+		}	
+		pending.push_back(newTransaction);
+	}
+	else if (algorithmChoice == 2)
+	{
+		if (newTransaction.isTransactionValid2() == false)
+		{
+			cout<<"new transaction is not valid"<<endl;
+			return;
+		}		
+		pending.push_back(newTransaction);
+	}
+
 }
 
 void blockchain::updateSize()
