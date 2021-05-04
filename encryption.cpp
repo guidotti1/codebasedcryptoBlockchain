@@ -457,6 +457,10 @@ void encryption::setOmega(string ourOmega)
 	omega=ourOmega;
 }
 
+void encryption::setPublicKey(publickey setpublic)
+{
+	ourPublic=setpublic;
+}
 
 void encryption::verifySignature()
 {
