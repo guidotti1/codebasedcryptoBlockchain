@@ -47,7 +47,6 @@ if (sigChoice == 1)
 {
 	runSimulation1(blockDifficulty, desiredReward, desiredNumberTransactions)
 }
-	
 else if (sigChoice == 2)
 {
 	runSimulation2(blockDifficulty, desiredReward, desiredNumberTransactions);
@@ -55,7 +54,6 @@ else if (sigChoice == 2)
 
 
 return 0;
-
 }
 
 string convertHashToBinary(string hash) 
@@ -76,9 +74,10 @@ void runSimulation1(int blockDifficulty, int desiredReward, int desiredNumberTra
 	vector<publickey> publicKeys;
 	vector<privatekey> privateKeys;
 	encryption temp("2", "2000", "1100", "1000", "256", "440", "560");
+	int microsecond = 1000;
 	for (int i = 0; i < desiredNumberTransactions; i++)
 	{
-		temo.createPublicPrivateKey();
+		temp.createPublicPrivateKey();
 		temp.runMagmaFile("1");
 		usleep(3 * microsecond);//sleeps for 3 seconds
 		temp.readPublicPrivateKey();	
@@ -107,7 +106,10 @@ void runSimulation1(int blockDifficulty, int desiredReward, int desiredNumberTra
 	}
 	cout<<"generating your public and private keys"<<endl;
 	cout<<"for simplicity, you will be the only one mining the pending transactions in the blockchain"<<endl;	
-	temp.generatePublicPrivateKey();
+	temp.createPublicPrivateKey();
+	temp.runMagmaFile("1");
+	usleep(3 * microsecond);//sleeps for 3 seconds
+	temp.readPublicPrivateKey();	
 	publickey myPublic = temp.getPublicKey();
 	privatekey myPrivate = temp.getPrivateKey();
 
