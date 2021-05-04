@@ -108,7 +108,7 @@ void blockchain::minePendingTransactions(publickey rewardAddress)
 	
 	pending.clear();
 	
-	transaction.newTransaction("NULL", rewardAddress, miningReward);
+	transaction newTransaction("NULL", rewardAddress, miningReward);
 	pending.push_back(newTransaction);
 }
 
