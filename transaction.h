@@ -50,7 +50,7 @@ public:
 	//three argument constructor used to set the public and private keys (if we are using the new CB system) and transaction amount
 	transaction(newCBPublic setfrom, newCBPublic setto, int setAmount);
 	//three argument constructor used to set the public and private keys (if we are using KKS system) and transaction amount
-	transaction(publickey setfrom, privatekey setto, int setAmount);
+	transaction(publickey setfrom, publickey setto, int setAmount);
 	transaction(string setfrom, string setto, int setAmount);
 	//note - I only really use this one in blockchain.minePendingTransactions() function
 	//in which case setfrom = "NULL" and setto is the reward address
