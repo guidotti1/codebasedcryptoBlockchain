@@ -51,7 +51,7 @@ transaction::transaction(newCBPublic setfrom, newCBPublic setto, int setAmount)
 	calculateHash();
 }
 
-transaction::transaction(publickey setfrom, privatekey setto, int setAmount)
+transaction::transaction(publickey setfrom, publickey setto, int setAmount)
 {
 	fromkeyKKS = setfrom;
 	tokeyKKS = setto;
@@ -335,8 +335,8 @@ bool transaction::isTransactionValid1()
 	int microsecond = 1000;
 	usleep(3 * microsecond);
 	//running verify signature program
-	trial.runMagmaFile("3");
-	bool verificationControl = trial.readVerification();
+	temp.runMagmaFile("3");
+	bool verificationControl = temp.readVerification();
 	if (verificationControl)
 	{
 		cout<<"KKS signature on the transaction is valid"<<endl;
