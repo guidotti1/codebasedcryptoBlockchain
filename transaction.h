@@ -74,7 +74,7 @@ public:
 	//sets sha 256 hash of this transaction- based on what is stored (fromaddress, toaddress, amount)
 	void calculateHash();
 	//sign a transaction using method 1 - KKS signature algorithm
-	void signTransaction1(publickey usedPublic, privateKey usedPrivate);
+	void signTransaction1(publickey usedPublic, privatekey usedPrivate);
 	//sign a transaction using method 2 - new CB signature algorithm
 	void signTransaction2(newCBPublic usedPublic, newCBPrivate usedPrivate);
 	//verify the signature for the transaction using method 1 - KKS signature algorithm
