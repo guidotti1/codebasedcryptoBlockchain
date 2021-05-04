@@ -71,7 +71,7 @@ transaction::transaction(publickey setfrom, privatekey setto, int setAmount)
 	{
 		for (int j = 0; j < fromkeyH[i].size(); j++)
 		{
-			from += fromkeyH(fromKeyS[i][j]);
+			from += to_string(fromkeyH[i][j]);
 		}
 	}
 	//same for the tokey information
@@ -198,7 +198,7 @@ publickey transaction::getfromkeyKKS()
 	return fromkeyKKS;
 }
 
-privatekey transaction::gettokeyKKS()
+publickey transaction::gettokeyKKS()
 {
 	return tokeyKKS;
 }
@@ -325,13 +325,13 @@ bool transaction::isTransactionValid1()
 	}
 	
 	encryption temp("2", "2000", "1100", "1000", "256", "440", "560");
-	temp.setPublicKey(fromkey);
-	vector<vector<int> > usedf = fromkeyKKS.getFMatrix();
-	vector<vector<int> > usedh = fromkeyKKS.getHMatrix();
+	temp.setPublicKey(fromkeyKKS);
+	vector<vector<int> > usedf = fromkeyKKS.getF();
+	vector<vector<int> > usedh = fromkeyKKS.getH();
 	temp.setOmega(KKSOmega);
 	temp.setMessage(hash);
 	//verifying the signature omega for the given message hash
-	trial.verifySignature();
+	temp.verifySignature();
 	int microsecond = 1000;
 	usleep(3 * microsecond);
 	//running verify signature program
