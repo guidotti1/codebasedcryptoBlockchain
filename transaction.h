@@ -69,6 +69,8 @@ public:
 	int getAmount();
 	newCBPublic getfromkey();
 	newCBPublic gettokey();
+	publickey getfromkeyKKS();
+	publickey gettokeyKKS();
 	//sets sha 256 hash of this transaction- based on what is stored (fromaddress, toaddress, amount)
 	void calculateHash();
 	//sign a transaction using method 1 - KKS signature algorithm
