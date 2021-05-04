@@ -29,3 +29,8 @@ vector<vector<int> > publickey::getH()
 {
 	return HMatrix;
 }
+
+bool operator==(publickey compare1, publickey compare2)
+{
+	return ((compare1.HMatrix == compare2.HMatrix) && (compare1.FMatrix == compare2.FMatrix));
+}
