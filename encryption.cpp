@@ -36,7 +36,6 @@ encryption::encryption(string setq, string setN, string setK, string setn, strin
 void encryption::createPublicPrivateKey()
 {
 //KKS digital signatures-  ATTEMPT TWO
-//seems to work roughly 60% of the time
 
 	string fileName = "createPublicPrivateKey.txt";
 	ofstream output;
